@@ -617,7 +617,7 @@ class InvoiceGenerate(webapp.RequestHandler):
 
 
     def get(self):
-        # This needs A LOT of work. We don't really want to give 
+    # This needs A LOT of work. We don't really want to give 
 	# the client the invoice key; the link we send them uses
 	# the checksum. In the following, we simply redirect to
 	# the actual invoice, but at some point this will change.
@@ -628,7 +628,7 @@ class InvoiceGenerate(webapp.RequestHandler):
 	inv = Invoices.all(keys_only=True)
 	inv.filter('checksum =', i)
 	invoice = inv.fetch(1)
-	foo = '<a href="/invoice?iid=' + str(invoice[0]) + '">Go to invoice</a>. FOOBAR'
+	foo = '<a href="/invoice?iid=' + str(invoice[0]) + '">Go to invoice</a>.'
 	self.response.out.write(foo)
  
 
