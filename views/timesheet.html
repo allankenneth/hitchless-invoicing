@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Rather Good Time Tracker</title>
+	<link rel="stylesheet" href="css/base.css" type="text/css">
+	<link rel="stylesheet" 
+			type="text/css" 
+			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
+			href="/css/mobile.css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+</head>
+<body id="timesheet">
+<div id="container">
+<h1><a href="/dashboard?clientkey={{ time.0.project.client.key }}#projects">&larr;</a> {{ time.0.project.pname }}</h1>
+<div id="main">
+<table id="invoice" cellpadding="5" cellspacing="5">
+<thead>
+<tr><th></th><th>Date</th><th>Worker</th><th>Note</th><th>Time</th><th>Service</th><th>Rate</th><th>Total</th></tr>
+</thead>
+<tbody>
+{% for entry in time %}
+<tr>
+	<td><a href="/timesheet?action=delete&tid={{ entry.key }}&pid={{ time.0.project.key }}">x</a></td>
+    <td>{{ entry.date }}</td>
+    <td>{{ entry.worker }}</td>
+    <td id="time-{{ entry.key.id }}">{{ entry.note }} </td>
+    <td>{{ entry.hours }}</td>
+    <td>{{ entry.service }}</td>
+    <td>${{ entry.rate }}/hr</td>
+    <td>${{ entry.total }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<div id="aside">
+
+</div>
+</div>
+</body>
+</html>

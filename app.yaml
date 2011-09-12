@@ -1,0 +1,21 @@
+application: hitchlessinvoicing
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /css
+  static_dir: views/css
+
+- url: /scripts
+  static_dir: views/scripts
+
+- url: /images
+  static_dir: views/images
+  
+- url: .*
+  script: main.py
+  secure: always
+
+builtins:
+- datastore_admin: on

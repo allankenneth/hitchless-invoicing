@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Rather Good Time Tracker</title>
+	<link rel="stylesheet" href="/css/styles.css" type="text/css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="scripts/stopwatch.js"></script>
+	<script type="text/javascript" src="scripts/rgc.js"></script>
+</head>
+<body id="projectlist">
+<div id="container">
+<div id="main">
+<h1>
+	<a href="/projects?clientkey={{ projects.0.client.key }}">&bull;</a> 
+	{{ projects.0.client.business }} 
+	<a href="#" class="show showinfo">info</a>
+</h1>
+<div class="clientinfo">
+	<div class="name">{{ projects.0.client.name }}, <span class="title">{{ projects.0.client.title }}</span></div>
+	<div class="email"><a href="mailto:{{ projects.0.client.0.email }}">{{ projects.0.client.email }}</a></div>
+	<div class="notes">{{ projects.0.client.notes }}</div>
+</div>
+
+<form id="timetrack" action="/addtime" method="post">
+	<fieldset>
+		<legend>Add Time</legend>
+		<input type="hidden" id="clientkey" name="clientkey" value="{{ projects.0.client.key }}">
+		<label><select name="pname">
+		{% for project in projects %}
+		<option>{{ project.pname }}</option>
+		{% endfor %}
+		</select></label><br>
+		<label>
+		<input type="date" id="date" name="date" size="11" value="">
+		</label><br>
+		<label>Worker
+			<select id="worker" name="worker">
+			<option>Allan</option>
+			<option>Amy</option>
+			</select>
+		</label><br>
+		<textarea id="note" name="note" rows="4" cols="20"></textarea><br>
+		<input type="hidden" id="hours" name="hours" value="">
+		<div id="timer"></div>
+		<input type="submit" value="Add">
+	</fieldset>
+</form>
+
+</div>
+</div>
+</body>
+</html>

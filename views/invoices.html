@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hitchless Invoicing</title>
+	<link rel="stylesheet" href="/css/styles.css" type="text/css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript">   
+	jQuery(function(){             
+        $(".showinfo").click(function(){
+            $(".clientinfo").slideToggle();
+            return false;
+        });
+	});
+	</script>
+</head>
+<body>
+<div id="container">
+<h1><a href="/projects?clientkey={{clientkey}}">&bull;</a> {{ client.0.business }} <a href="#" class="show showinfo">info</a></h1>
+<div class="clientinfo">
+	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+	<div class="email"><a href="mailto:{{ client.email }}">{{ client.0.email }}</a></div>
+	<div class="notes">{{ client.0.notes }}</div>
+</div>
+<table id="invoices">
+<tr>
+	<th id="datecol">Date</th>
+	<th>ID</th>
+	<th>Status</th>
+</tr>
+{% for invoice in invoices %}
+<tr>
+	<td>
+		{{ invoice.date }}
+	</td>
+	<td>
+		<a href="/invoice?iid={{ invoice.key }}">{{ invoice.key.id }}</a>
+	</td>
+	<td>
+		{{ invoice.status }}
+	</td>
+</tr>
+{% endfor %}
+</table>
+
+</div>
+</body>
+</html>

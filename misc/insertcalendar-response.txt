@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns0:entry xmlns:ns0="http://www.w3.org/2005/Atom">
+
+	<ns1:hidden value="false" xmlns:ns1="http://schemas.google.com/gCal/2005" />
+
+	<ns1:timezone value="America/Los_Angeles" xmlns:ns1="http://schemas.google.com/gCal/2005" />
+
+	<ns0:category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/gCal/2005#calendarmeta" />
+
+	<ns0:id>http://www.google.com/calendar/feeds/default/owncalendars/full/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com</ns0:id>
+
+<ns0:author>
+	<ns0:name>Bicycle-itis.com</ns0:name>
+</ns0:author>
+
+<ns0:content src="https://www.google.com/calendar/feeds/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com/private/full" type="application/atom+xml" />
+
+<ns1:where valueString="Victoria" xmlns:ns1="http://schemas.google.com/g/2005" />
+
+<ns0:updated>2011-02-09T04:25:15.000Z</ns0:updated>
+
+<ns0:published>2011-02-09T04:25:15.262Z</ns0:published>
+
+<ns0:summary type="text">This calendar contains times for this project</ns0:summary>
+
+<ns1:color value="#2952A3" xmlns:ns1="http://schemas.google.com/gCal/2005" /><ns1:accesslevel value="root" xmlns:ns1="http://schemas.google.com/gCal/2005" /><ns0:title type="text">Bicycle-itis.com</ns0:title><ns1:selected value="false" xmlns:ns1="http://schemas.google.com/gCal/2005" /><ns0:link href="https://www.google.com/calendar/feeds/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com/private/full" rel="alternate" type="application/atom+xml" /><ns0:link href="https://www.google.com/calendar/feeds/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com/private/full" rel="http://schemas.google.com/gCal/2005#eventFeed" type="application/atom+xml" /><ns0:link href="https://www.google.com/calendar/feeds/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com/acl/full" rel="http://schemas.google.com/acl/2007#accessControlList" type="application/atom+xml" /><ns0:link href="https://www.google.com/calendar/feeds/default/owncalendars/full/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com" rel="self" type="application/atom+xml" /><ns0:link href="https://www.google.com/calendar/feeds/default/owncalendars/full/hitchless.com_er5gqhpv6jm1r0icjushfgn2p8%40group.calendar.google.com" rel="edit" type="application/atom+xml" /><ns1:timesCleaned value="0" xmlns:ns1="http://schemas.google.com/gCal/2005" /></ns0:entry>
+Status: 500 Internal Server Error
+Content-Type: text/html; charset=utf-8
+Cache-Control: no-cache
+Expires: Fri, 01 Jan 1990 00:00:00 GMT
+Content-Length: 459
+
+<pre>Traceback (most recent call last):
+  File &quot;/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/webapp/__init__.py&quot;, line 517, in __call__
+    handler.post(*groups)
+  File &quot;/Users/allankh/Dropbox/hitchless/next.py&quot;, line 244, in post
+    print atom.core.parse(str(new_calendar), entry)
+NameError: global name 'entry' is not defined
+</pre>

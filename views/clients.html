@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hitchless</title>
+	<link rel="stylesheet" href="css/base.css" type="text/css">
+	<link rel="stylesheet" 
+			type="text/css" 
+			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
+			href="/css/mobile.css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/scripts/hitchless.js"></script>
+</head>
+<body>
+<section id="container">
+{% if syncmessage %}
+<h1><a href="/">&bull;</a> New Contacts <a class="help" href="#" title="These contacts are in the shared contact list, in the group 'Clients.' but are not yet managed by the invoicing system.">?</a></h1>
+<section class="newclients">
+{% for mess in syncmessage %}
+<form method="post" action="/client" class="addclient">
+	<div>
+	  <input type="hidden" name="business" value="{{mess.0}}">
+	  <input type="hidden" name="name" value="{{mess.1}}">
+	  <input type="hidden" name="title" value="{{mess.2}}">
+	  <input type="hidden" name="email" value="{{mess.3}}">
+	  <input type="hidden" name="notes" value="{{mess.4}}">
+	  <button>Add {{mess.0}}</button>
+	</div>
+</form>
+{% endfor %}
+</section>
+{% else %}
+<h1><a id="sync" href="/?sync=1">&#9851;</a></h1>
+{% endif %}
+<section id="main">
+<ul id="clientlist">
+{% if clients %}
+{% for client in clients %}
+	<li><a href="dashboard?clientkey={{ client.key }}#projects">{{ client.business }}</a></li>
+{% endfor %}
+{% else %}
+	<p>No contacts and/or can't connect to Google Contacts to import any.</p>
+{% endif %}
+</ul>
+<!--
+<form method="post" action="/client" class="addclient">
+	<div>
+	  <input type="hidden" name="business" value="Rather Good Design">
+	  <input type="hidden" name="name" value="Amy Rutherford">
+	  <input type="hidden" name="title" value="Owner">
+	  <input type="hidden" name="email" value="amy@rathergood.ca">
+	  <input type="hidden" name="notes" value="Sexy lady.">
+	  <button>Add Amy</button>
+	</div>
+</form>
+-->
+</section> <!-- /#main -->
+<nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
+</section> <!-- /#container -->
+</body>
+</html>

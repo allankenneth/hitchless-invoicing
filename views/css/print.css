@@ -1,0 +1,9 @@
+.sub { text-align: right; }
+#invoice { width: 600px; }
+th { text-align: left; }
+#timer { width: 200px; }
+section { display: block; margin: 0 auto; width: 600px; }
+#rathergood { float: right; text-align: right; width: 250px;}
+#timetrack { display: none; }
+fieldset { border: 0; }
+a { display: none; }

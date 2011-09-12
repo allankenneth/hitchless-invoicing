@@ -1,0 +1,100 @@
+* { 
+	margin: 0; 
+	padding: 0; 
+}
+h1 {
+	color: #333;
+	font-size: 14px !important;
+}
+a {
+	color: #333;
+	text-decoration: none;
+}
+a:hover {
+
+}
+a:active {
+	font-weight: normal;
+}
+h1 a {
+	color: #555;
+
+}
+table {
+	width: 100%;
+}
+hr {
+	display: none;
+}
+form {
+	margin: 10px;
+}
+fieldset {
+	border: 0;
+}
+legend {
+	display: none;
+}
+th {
+	text-align: left;
+}
+li {
+	overflow: auto;
+}
+li a {
+/* 	display: block; */
+}
+#container { 
+
+}
+#main {
+
+}
+.panel {
+	border-radius: 0;
+	float: none;
+	margin: 0;
+	padding: 0;
+	width: auto;
+	-webkit-box-shadow: 0 0 0 transparent;
+}
+#nav {
+	background-image: -webkit-gradient(linear, 
+		0% 0%, 
+		0% 100%, 
+		from(#f9f9f9), 
+		to(#e6e6e6), 
+		color-stop(.53,#eaeaea)
+	);
+	display: block;
+	overflow: auto;
+}
+#nav li {
+	float: left;
+	list-style-type: none;
+}
+#aside {
+	float: none;
+}
+#invoices, #projects, #timeform {
+	display: none;
+	padding: 0;
+	width: 100%;
+}
+#projects {
+	display: block;
+}
+#clientlist li {
+	background: rgba(255,255,255,.2);
+	padding: 20px;
+}
+#clientnav {
+	left: 15%;
+}
+#clientinfo {
+	left: 10px;
+}
+.project {
+	max-height: auto;
+	overflow-y: auto;
+}
