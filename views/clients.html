@@ -12,7 +12,7 @@
 <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="/">hitchless Invoicing</a>
+      <a class="brand">hitchless Invoicing</a>
     </div>
   </div>
 </div>
@@ -24,7 +24,7 @@
 		<ul id="clientlist">
 		{% if clients %}
 		{% for client in clients %}
-			<li><a href="dashboard?clientkey={{ client.key }}#projects">{{ client.business }}</a></li>
+			<li><a href="dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
 		{% endfor %}
 		{% else %}
 			<p>No contacts.</p>

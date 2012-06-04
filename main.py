@@ -194,6 +194,7 @@ class DashboardHandler(webapp.RequestHandler):
                 'author': settings.APP['author'],
                 'allclients': all_clients,
                 'client': client,
+                'businessname': client[0].business,
                 'services': services,
                 'projectkeys': projects,
                 'invoices': invoices,
