@@ -1,12 +1,12 @@
-jQuery(function(){             
+jQuery(function(){
 	var panel = window.location.hash
 	$(panel).show();
 	$('#showcinfo').click(function(e){
-		$('#clientinfo').toggle();
+		$('#clientinfo').slideToggle();
 		e.preventDefault();
 	});
 	$('.clientmenu').click(function(e){
-		$('#clientnav').toggle();
+		$('#clientnav').slideToggle();
 		e.preventDefault();
 	});
 	$('#servicemenu').click(function(e){
@@ -29,40 +29,36 @@ jQuery(function(){
 		$(targetdiv).child("input").focus();
 		e.preventDefault();
 	});
-	$(".filterinvoices").click(function(e){
-		target = $(this).attr('href');
-		go = target.split("#");
-		$(".invoice").hide();
-		goclass = "." + go[1];
-		$(goclass).show();
-		e.preventDefault();
+	$('.statuschanger button').hide();
+	$('.statuschange').change(function(){
+		$(this).parent().parent().submit();
+		return false;
 	});
-	$(".showallinvoices").click(function(e){
-		$(".invoice").show();
-		e.preventDefault();
-	});
-
 	$('.sheet').click(function(e){
 		foo = $(this).attr("href");
 		$(this).next(".sheetplaceholder").load(foo); 
 		e.preventDefault();
 	});
-
-
-/*
-	$('#timetrack').submit(function(){
-		
-		bar = $("#pid").val()
-		foo = $(this).attr("action");
-		
-		foobar = foo + "?pid=" + bar
-		
-		alert(foobar);
-
-		$("#timepost").load(foo); 
- 		return false;
-
-	});
+	/*
+$('#timetrack').submit(function(){
+        var projectid = $("#pid").val();
+        where = "/timesheet?pid=" + projectid
+        $("#timepost").html("Processing &hellip;");
+		$.ajax({
+            type: "POST",
+            url: "/timesheet",
+            data: $('#timetrack').serialize(),
+            success: function() {
+                $('#timepost').load(where);
+                $(".invoiceproject").each(function(){
+                    var p = $(this).val();
+                    if(p == projectid) {
+                        $(this).removeAttr('disabled');
+                    }
+                });
+            }
+        });
+        return false;
+    });
 */
-
 });

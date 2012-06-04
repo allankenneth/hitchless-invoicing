@@ -1,0 +1,89 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hitchless Invoicing</title>
+	<link rel="stylesheet" href="css/base.css" type="text/css">
+	<link rel="stylesheet" 
+			type="text/css" 
+			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
+			href="/css/mobile.css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+</head>
+<body id="invoice">
+    <div id="invoicemenu"> 
+
+     	<form method="get" action="/invoice" class="mark statuschanger">
+        <div>
+            <a href="/dashboard?clientkey={{ times.0.invoice.client.key }}">
+                Client Dash
+            </a>
+            <a class="send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+				Send
+            </a>
+            <a class="deleteitem" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+                x
+            </a>
+            <input type="hidden" name="action" value="statusupdate">
+			<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
+			<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
+			<!-- {{ invoice.status }} -->
+			<select class="statuschange" name="status">
+			{% for status in statuses %}
+				<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
+			{% endfor %}
+			</select>
+			<button>change</button>
+		</div>
+	</form>
+    </div>
+<div id="container">
+<img src="/qr?hashish={{ times.0.invoice.checksum}}" style="float:left; margin: 0 20px 20px 0" width="140">
+<h1>Invoice #{{ times.0.invoice.inum }}</h1>
+<h2>{{ times.0.invoice.date }}</h2>
+<div class="companydetails">
+	<img src="{{ logopath }}" alt="company logo">
+	<p class="coname">{{ companyname }}</p>
+	<p>{{ companyaddress }}</p>
+	<p>{{ companycity }}, {{ companyprovince }}</p>
+	<p>{{ companycode }}</p>
+</div>
+<div class="clientdetails">
+	<strong>{{ times.0.invoice.client.business }}</strong><br>
+	<em>{{ times.0.invoice.client.name }}, {{ times.0.invoice.client.title }}</em><br>
+	{{ times.0.invoice.client.email }}
+</div>
+<div id="main">
+<table style="border-collapse:collapse;">
+{% for time in times %}
+	{% ifchanged time.project.pname %}
+	<tr><td colspan="6" class="projecthead">Project: <strong>{{ time.project.pname }}</strong></td></tr>
+	{% endifchanged %}
+	<tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+		<td width="200">{{ time.date }}</td>
+		<td width="300">{{ time.note }}</td>
+		<td>{{ time.hours }}<span>x</span></td>
+		<td>{{ time.service }}@</td>
+		<td>${{ time.rate }}/{{ time.rateunit }}</td>
+		<td>${{ time.total }}</td>
+	</tr>
+{% endfor %}
+<tr><td colspan="2" class="sub">Total Hours:</td><td>{{ totalhours }}</td><td></td><td></td><td></td></tr>
+<tr class="sub"><td colspan="5">Subtotal:</td><td>${{ subtotal }}</td></tr>
+<tr class="sub"><td colspan="5">Tax:</td><td>${{ tax }}</td></tr>
+<tr class="sub"><td colspan="5">Total:</td><td>${{ totalinvoice }}</td></tr>
+</table> 
+<div>
+<!-- Status: {{ times.0.invoice.status }} -->
+{% if times.0.invoice.notes %}
+<br>
+Notes: {{ times.0.invoice.notes }}
+{% endif %}
+</div>
+<div class="checksum">
+<img src="/qr?hashish={{ times.0.invoice.checksum}}&checksum=1" style="float:left; margin: 0 20px 20px 0" width="80"><br>
+	<span>Checksum:<br>{{ times.0.invoice.checksum }}</span>
+</div>
+</div> <!-- /#main -->
+</div>
+</body>
+</html>

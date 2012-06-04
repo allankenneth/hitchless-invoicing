@@ -1,0 +1,44 @@
+<section id="timeform" class="panel">
+<!-- <header><h1>Tracker</h1></header> -->
+<div id="timetrack">
+<form id="addservice" action="/service" method="post">
+<fieldset>
+	<legend>Add Service</legend>
+    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
+    <input type="text" name="service" size="20" placeholder="Service name">
+	$<input type="number" name="rate" size="5" placeholder="Rate">
+	/&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
+	<input type="submit" value="Add Service">	
+</fieldset>
+</form>
+<form action="/timesheet" method="post">
+	<fieldset>
+		<legend>Add Time</legend>
+		<input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
+		<input type="hidden" id="worker" name="worker" value="Allan">
+
+		<br>
+		<select id="pid" name="pid">
+			{% for project in projectkeys %}
+			<option value="{{ project.key }}">{{ project.pname }}</option>
+			{% endfor %}
+		</select>
+		<br>
+		<input type="datetime-local" size="30" id="datetime" name="date" placeholder="YYYY-MM-DDTHH:MM:SS">
+		<br>
+		<textarea id="note" name="note" rows="4" cols="30" placeholder="Note"></textarea><br>
+		<select name="service">
+			{% for service in services %}
+			<option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
+			{% endfor %}
+		</select>
+		<a id="servicemenu" href="#addservice">+</a><br>
+		<input type="number" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
+		<input type="submit" value="Add Time">
+	</fieldset>
+</form>
+</div>  <!-- /#timetrack -->
+<div id="timepost"></div>
+
+</section> <!-- /#timeform -->
+

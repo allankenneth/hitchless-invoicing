@@ -8,13 +8,7 @@ body, html {
 	-webkit-font-smoothing: antialiased;
 }
 body {
-	background: #eee -webkit-gradient(linear, 
-		0% 0%, 
-		0% 100%, 
-		from(#fafafa), 
-		to(#ccc), 
-		color-stop(.25,#eee)
-	);
+	background: #F1F1F1;
 	background-attachment: fixed;
 	color: #333;
 	font-family: Helvetica, Arial, sans-serif;
@@ -24,6 +18,9 @@ h1 {
 	color: rgba(0,0,0,.8);
 	font-size: 30px;
 	text-shadow: 1px 1px 2px #FFF;
+}
+a:hover {
+	color: grey;
 }
 strong {
 	color: #666;
@@ -39,8 +36,9 @@ strong {
 		);
 	border-bottom: 1px solid #EEE;
 	border-top: 2px solid #FFF;
-	margin-bottom: 8px;
-	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,.1);
+	box-shadow: 0 3px 10px rgba(0,0,0,.1);
+	position: relative;
+	z-index: 300;
 }
 #masthead header {
 	background-image: -webkit-gradient(linear, 
@@ -50,32 +48,26 @@ strong {
 		to(#F1F1F1), 
 		color-stop(.53,#EFEFEF)
 	);
-	border: 1px solid #EEE;
-	border-radius: 5px;
+/* 	box-shadow: 0 0 10px rgba(0,0,0,.1); */
 	color: rgba(0,0,0,.5);
-	font-family: 'OFL Sorts Mill Goudy TT', Helvetica, Arial, sans-serif;
 	height: 45px;
-	margin: 10px auto;
-	padding: 5px 20px;
 	text-align: center;
-	max-width: 66.6%;
-	-webkit-box-shadow: 0 0 10px rgba(0,0,0,.1);
+	
 }
 #masthead header h1 {
-	border-radius: 5px;
 	padding: 10px 5px 5px 5px;
-	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
 }
 #masthead h1 a {
-	color: rgba(0,0,0,.5);
+	color: rgba(0,0,0);
 }
 section header h1 {
-
+	clear: both;
+	margin-left: 20px;
 }
 section h1,
 h2 {
 	color: rgba(0,0,0,.4);
-	font-size: 22px;
+	font-size: 20px;
 	font-weight: lighter;
 	margin-bottom: 0;
 	text-transform: uppercase;
@@ -100,15 +92,15 @@ hr {
 	clear: both;
 
 }
-form, 
-.invoice,
 .vcard {
-	background: rgba(255,255,255,.5);
-	border-radius: 5px;
-	margin-bottom: 10px;
-	padding: 10px;
-	overflow: auto;
-	-webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.3);
+	display: none;
+}
+.vcard,
+.inv,
+.project {
+	background: #FFF;
+	padding: 20px;
+
 }
 fieldset { 
 	border: 0;
@@ -116,6 +108,25 @@ fieldset {
 }
 legend {
 	display: none;
+}
+.addclient {
+	padding: 20px;
+}
+.addclient legend {
+    display: block;
+    font-weight: bold;
+    margin: 60px;
+    text-size: 30px;
+}
+.addclient div {
+	padding: 3px;
+}
+
+.addclient label span {
+	display: inline-block;
+	margin-right: 5px;
+	text-align: right;
+	width: 80px;
 }
 table {
 	border-collapse: collapse;
@@ -134,11 +145,13 @@ li {
 	overflow: auto;
 }
 input[type="text"],
+input[type="email"],
 input[type="number"],
 input[type="datetime-local"],
 textarea
  {
-	font-size: 12px;
+	border: 1px solid #CCC;
+ 	border-radius: 3px;
 	padding: 3px;
 }
 select {
@@ -147,8 +160,12 @@ select {
 	padding: 20px;
 }
 button {
-	background: transparent;
+	background: white;
 	border: 0;
+	border-radius: 3px;
+	font-weight: bold;
+	padding: 5px; 20px;
+	text-align: center;
 }
 img {
 	max-width: 100%;
@@ -159,13 +176,20 @@ a img {
 .clearboth {
 	clear: both;
 }
+#message {
+    background: green;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+}
 #container { 
 	margin: 0 auto; 
-	max-width: 1240px;
+
 }
 #invoice #container {
 	background: #FFF;
-	max-width: 800px;
+
 	padding: 40px;
 }
 #main {
@@ -175,26 +199,28 @@ a img {
 	clear: both;
 }
 #nav {
-	display: none;
+	margin: 10px 0 0 0;
+	text-align: center;
+}
+#nav li {
+	display: inline-block;
+	padding: 0;
+}
+#nav li a {
+	border-radius: 3px;
+	display: inline-block;
+	padding: 8px 10px 10px 10px;
+}
+#nav li a.active {
+	background: #FFF;
+/* 	font-size: 22px;	 */
 }
 .panel {
-	background-image: -webkit-gradient(linear, 
-		0% 0%, 
-		0% 100%, 
-		from(#f9f9f9), 
-		to(#e6e6e6), 
-		color-stop(.53,#eaeaea)
-	);
-	border: 1px solid rgba(0,0,0,0.03);
-	float: left;
-	margin: 1%;
-	margin-bottom: 30px;
-	min-width: 250px;
-	padding: 1%;
-	width: 29%;
-	-webkit-border-radius: 6px;
-	-webkit-box-shadow: 0 4px 10px rgba(0,0,0,0.1), 
-						inset 0px 1px 0px rgba(255,255,255,0.9);
+	background: #FFF;
+}
+#invoicemenu {
+	background: #FFF;
+	padding: 5px;
 }
 #invoices {
 	clear: both;
@@ -202,7 +228,7 @@ a img {
 #invoices, 
 #projects, 
 #timeform {
-	display: block;
+	display: none;
 }
 #timeform input, 
 #timeform select,
@@ -212,7 +238,7 @@ a img {
 #invoices td {
 
 }
-#addproject, 
+#clientmenu,
 #newinvoice,
 .filter {
 	display: none;
@@ -232,6 +258,10 @@ a img {
 .mark button:hover {
 	cursor: pointer;
 }
+#addproject {
+	background: #FFF;
+	padding: 20px;
+}
 #addproject input[type="submit"] {
 	margin: 5px;
 }
@@ -244,15 +274,17 @@ a img {
 
 }
 .project {
+/*
 	max-height: 200px;
 	overflow-y: scroll;
+*/
 }
 .brief {
 	background: rgba(255,255,255,1);
 	border-radius: 3px;
 	display: none;
 	padding: 10px;
-	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.5);
+
 }
 .sheet {
 	font-size: 18px;
@@ -262,19 +294,9 @@ a img {
 .odd {
 	background: rgba(0,0,0,.05);
 }
-#showfilter,
-#showaddproject,
-#showaddtime {
-	background: rgba(255,255,255,.5);
-	border: 1px solid #FFF;
-	border-radius: 5px;
-	color: rgba(0,0,0,.5);
-	display: inline-block;
-	font-size: 12px;
-	height: 7px;
-	padding: 2px 5px 7px 4px;
-	text-shadow: 1px 1px 1px;
-	-webkit-box-shadow: inset 0 1px 6px rgba(0,0,0,.1);
+
+#showaddproject {
+	background: #FFF;
 }
 
 
@@ -296,50 +318,41 @@ a img {
 	background: rgba(255,255,255,.9);
 }
 .invoiced {
-	background: rgba(0,0,0,.09);
+/* 	background: rgba(255,255,255,1); */
 }
 .paid {
-	background: rgba(0,0,0,.02);
-	display: none;
+	background: rgba(208, 240, 192, 1);
+    /* display: none;*/
 }
 .date {
 	font-size: 18px;
 }
 .clientmenu {
 	background: #FFF;
-	border-radius: 5px;
-	float: right;	
-	margin: -3px 5px 0 0;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+/* 	margin: -10px 5px 0 0; */
+	padding-top: 7px;
+	position: absolute;
+	right: 5px;
+	top: 0;
 }
 #clientnav {
-	background: rgba(255,255,255,0.95);
-	border: 2px solid #FFF;
-	border-radius: 10px;
+	background: rgba(255,255,255,1);
 	display: none;
-	margin: 0 auto;
-	padding: 5px;
 	position: relative;
-	width: 66.6%;
-	-webkit-box-shadow: 0 1px 10px rgba(0,0,0,.5);
-}
-#clientnav ul,
-#addservice fieldset {
-	border-radius: 5px;
-	padding: 5px;
-	-webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
+
+
 }
 #clientnav li {
 	padding: 0;
 }
-#clientnav a {
-	background: rgba(255,255,255,0.8);
-	border-bottom: 1px solid rgba(0,0,0,.07);
+#clientnav li a {
+
 	display: block;
-	padding: 5px 20px;
+	padding: 15px 20px;
 }
-#clientnav li:last-child a {
-	border-bottom: 1px solid transparent;
-}
+
 #addservice {
 	border-radius: 10px;
 	display: none;
@@ -353,13 +366,7 @@ a img {
 	margin-top: -55px;
 	text-align: right;
 }
-#clientinfo {
-	display: none;
-	margin: 0 auto;
-	padding: 5px;
-	text-align: center;
-	width: 420px;
-}
+
 .status {
 	color: rgba(0,0,0,.1);
 }
@@ -368,23 +375,28 @@ a img {
 }
 
 .sheetplaceholder {
-	max-width: 320px;
 	overflow: hidden;
 	white-space: normal;
 }
 .invoice {
 	background: rgba(255,255,255,.6);
-	margin: 10px;
+
 }
+
+
+#timetrack {
+	background: rgba(255,255,255,1);
+	padding: 20px;
+}
+
+
+
 .timeitems {
-	background: rgba(255,255,255,.9);
-	border-radius: 3px;
-	margin-bottom: 2px;
-	padding: 10px;
-	-webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.9);
+
+
 }
 .timeitem {
-
+	margin: 10px 0;	
 }
 .timenote {
 	background: rgba(255,255,255,.5);
@@ -392,7 +404,7 @@ a img {
 }
 .deleteitem {
 	border-radius: 7.5px;
-	box-shadow: inset 0 1px 3px rgba(0,0,0,.9);
+
 	display: block;
 	height: 15px;
 	float: right;
@@ -402,10 +414,10 @@ a img {
 }
 .deleteitem:hover {
 	color: #000;
-	box-shadow: inset 0 1px 6px rgba(0,0,0,1);
+
 }
 .deleteitem:active {
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.1);
+
 }
 .projecthead {
 	border-bottom: 1px solid #999;
@@ -416,4 +428,19 @@ a img {
 	display: block;
 	font-size: 10px;
 	margin: 30px 0 0 5px;
+}
+.coname {
+	font-size: 16px;
+	font-weight: bold;
+}
+.total span {
+
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 2px;
+}
+.deleted {
+    display: none;
 }

@@ -4,18 +4,23 @@
 	<meta charset="UTF-8">
 	<title>{{ client.0.business }} ~ {{ title }}</title>
 	<link rel="stylesheet" href="css/base.css" type="text/css">
-	<link rel="stylesheet" 
-			type="text/css" 
-			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
-			href="/css/mobile.css">
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 	
-	<script type="text/javascript" src="scripts/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-1.6.2.min.js"></script>
 	<script type="text/javascript" src="scripts/hitchless.js"></script>
 </head>
 <body id="projectlist">
+<nav id="clientnav">
+	<ul>
+		{% for client in allclients %}
+		<li><a href="/dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
+		{% endfor %}
+		<li><a href="/">All</a></li>
+	</ul>
+</nav>
+
 <section id="masthead">
 	<header>
 		<h1>
@@ -23,23 +28,16 @@
 			<a class="clientmenu" href="#clientnav"><img src="/images/arrow.png" alt="Show Clients"></a>
 		</h1>
 	</header>
-	<nav id="clientnav">
-	<ul>
-		{% for client in allclients %}
-		<li><a href="/dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
-		{% endfor %}
-		<li><a href="/?sync=1">&bull; Sync</a></li>
-	</ul>
-</nav>
-</section>
-<div id="clientinfo">
-	<div class="vcard">
-		<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
-		<div class="email"><a href="mailto:{{ client.0.email }}">{{ client.0.email }}</a></div>
-		<div class="notes">{{ client.0.notes }}</div>
-	</div>
 
+</section>
+
+<div id="clientinfo" class="vcard">
+	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+	<div class="email"><a href="mailto:{{ client.0.email }}">{{ client.0.email }}</a></div>
+	<div class="notes">{{ client.0.notes }}</div>
 </div>
+
+
 <div id="container">
 <nav id="nav">
 	<ul>
@@ -55,63 +53,35 @@
 </nav>
 {% if invoices %}
 <section id="invoices" class="panel">
-<header><h1>Invoices <a class="show" id="showfilter" href="#invoicefilter">+</a></h1></header>
+<!-- <header><h1>Invoices</h1></header> -->
+
 <nav id="invoicefilter" class="filter">
-	<a href="#" class="showallinvoices">All</a>
-	<a href="#paid" class="filterinvoices">Paid</a>
-	<a href="#draft" class="filterinvoices">Draft</a>
-	<a href="#invoiced" class="filterinvoices">Sent</a>
+    <a href="#" class="showallinvoices">All</a>
+    <a href="#paid" class="filterinvoices">Paid</a>
+    <a href="#draft" class="filterinvoices">Draft</a>
+    <a href="#invoiced" class="filterinvoices">Sent</a>
 </nav>
+
 {% for invoice in invoices %}
-<div class="invoice {{ invoice.status }}">
-	<div class="iid">
-		<a href="#info-{{ invoice.key.id }}" class="show"> 
-			#{{ invoice.inum }} - {{ invoice.date }} - {{ invoice.totalhours }} hours, ${{ invoice.totalbill }}
-		</a>
-	</div>
-	<div id="info-{{ invoice.key.id }}" class="brief">
-		<div class="details">
-			<div>
-                    <a class="deleteitem" href="/invoice?action=delete&iid={{ invoice.key }}&cid={{ projectkeys.0.client.key }}">
-                        x
-                    </a>
-            </div>
-			<div> 
-                <a href="/invoice?iid={{ invoice.key }}" target="_blank">
-					View
-                </a>
-                <a class="send" href="/invoice?action=send&iid={{ invoice.key }}&cid={{ projectkeys.0.client.key }}">
-					Send
-                </a>
+<div id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">
 
-            </div>
+<a href="/invoice?iid={{ invoice.key }}" class="total">
+    #{{ invoice.inum }} 
+    <span>${{ invoice.totalbill }}</span>
+    {{ invoice.date }} -
+    {{ invoice.status }}
+</a>
 
-			<form method="post" action="/invoice" class="mark">
-				<div>
-					<input type="hidden" name="action" value="statusupdate">
-					<input type="hidden" name="iid" value="{{ invoice.key }}">
-					<input type="hidden" name="clientkey" value="{{projectkeys.0.client.key}}">
-					{{ invoice.status }}
-					<select name="status">
-						<option>paid</option>
-						<option>draft</option>
-						<option>sent</option>
-					</select>
-					<button>change</button>
-				</div>
-			</form>
 
-		</div>
-	</div> <!-- /.brief -->
+
 </div>
 {% endfor %}
 
 </section> <!-- /#invoices -->
 {% endif %}
 <section id="projects" class="panel">
-<header>
-	<h1>Projects <a class="show" id="showaddproject" href="#addproject">+</a></h1>
-</header>
+<!-- <header><h1>Projects</h1></header> -->
+
 <form action="/project" method="post" id="addproject">
 	<fieldset>
 		<legend>Add a project</legend>
@@ -136,7 +106,9 @@
 					name="projects" 
 					value="{{ project.key }}" {% ifequal project.status 'empty' %} disabled {% endifequal %}>
 			<a class="sheet" href="/timesheet?pid={{ project.key }}">{{ project.pname }}</a>
-			<div class="sheetplaceholder"></div>
+			<div class="sheetplaceholder">
+				
+			</div>
 		</div>
 		{% endfor %}
 		</div>		
@@ -145,46 +117,9 @@
 {% endif %}
 </section> <!-- /#projects -->
 {% if projectkeys %}
-<section id="timeform" class="panel">
-<header>
-	<h1>Tracker <a class="show" id="showaddtime" href="#timetrack">+</a></h1>
-</header>
-<form id="addservice" action="/service" method="post">
-<fieldset>
-	<legend>Add Service</legend>
-	<input type="text" name="service" size="20" placeholder="Service name">
-	$<input type="number" name="rate" size="5" placeholder="Rate">
-	/&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
-	<input type="submit" value="Add Service">	
-</fieldset>
-</form>
-<form id="timetrack" action="/timesheet" method="post">
-	<fieldset>
-		<legend>Add Time</legend>
-		<input type="hidden" id="clientkey" name="clientkey" value="{{ projects.0.client.key }}">
-		<input type="hidden" id="worker" name="worker" value="Allan">
-		<select name="service">
-			{% for service in services %}
-			<option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
-			{% endfor %}
-		</select>
-		<a id="servicemenu" href="#addservice">+</a>
-		<br>
-		<select id="pid" name="pid">
-			{% for project in projectkeys %}
-			<option value="{{ project.key }}">{{ project.pname }}</option>
-			{% endfor %}
-		</select>
-		<br>
-		<input type="datetime-local" size="30" id="datetime" name="date" placeholder="YYYY-MM-DDTHH:MM:SS">
-		<br>
-		<textarea id="note" name="note" rows="4" cols="30" placeholder="Note"></textarea><br>
-		<input type="number" step="any" id="hours" name="hours" size="10" placeholder="Multiplier"><br>
-		<input type="submit" value="Add Time">
-	</fieldset>
-</form>
-<div id="timepost"></div>
-</section> <!-- /#timeform -->
+
+{% include "timeform.html" %}
+
 {% endif %}
 </div>
 

@@ -13,4 +13,33 @@ indexes:
 - kind: Invoices
   properties:
   - name: client
+  - name: inum
+
+- kind: Invoices
+  properties:
+  - name: client
+  - name: inum
+    direction: desc
+
+- kind: Invoices
+  properties:
+  - name: client
   - name: status
+
+- kind: Time
+  properties:
+  - name: project
+  - name: date
+
+- kind: Time
+  properties:
+  - name: project
+  - name: date
+    direction: desc
+
+- kind: Time
+  properties:
+  - name: project
+  - name: status
+  - name: date
+    direction: desc

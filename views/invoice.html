@@ -10,15 +10,46 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body id="invoice">
+    <div id="invoicemenu"> 
+     	<form method="get" action="/invoice" class="mark statuschanger">
+        <div>
+            <a href="/dashboard?clientkey={{ times.0.invoice.client.key }}">
+                Dashboard
+            </a>
+            {% if times.0.invoice.checksum  %}
+            <a class="send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
+            </a>
+            {% endif %}
+            {% if not times.0.invoice.checksum  %}
+            <a class="send" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+                Finalize
+            </a>
+            {% endif %}
+            <a class="deleteitem" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+                x
+            </a>
+            <input type="hidden" name="action" value="statusupdate">
+			<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
+			<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
+			<!-- {{ invoice.status }} -->
+			<select class="statuschange" name="status">
+			{% for status in statuses %}
+				<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
+			{% endfor %}
+			</select>
+			<button>change</button>
+		</div>
+	</form>
+    </div>
+<div id="message">{{ message }}</div>
 <div id="container">
-
-	<!-- http://localhost:8080/invoice-gen?ichecksum={{ times.0.invoice.checksum }} -->
-<img style="float:left; margin: 5px 20px 20px 0" src="http://chart.apis.google.com/chart?cht=qr&chs=120x120&chl=http://hitchless.com&chld=H|0">
-<h1><!-- <a href="/dashboard?clientkey={{ times.0.invoice.client.key }}#invoices">&larr;</a>  -->Invoice #{{ times.0.invoice.inum }}</h1>
+<img src="/qr?hashish={{ times.0.invoice.checksum}}" style="float:left; margin: 0 20px 20px 0" width="140">
+<h1>Invoice #{{ times.0.invoice.inum }}</h1>
 <h2>{{ times.0.invoice.date }}</h2>
 <div class="companydetails">
 	<img src="{{ logopath }}" alt="company logo">
-	<p>{{ companyname }}</p>
+	<p class="coname">{{ companyname }}</p>
 	<p>{{ companyaddress }}</p>
 	<p>{{ companycity }}, {{ companyprovince }}</p>
 	<p>{{ companycode }}</p>
@@ -28,10 +59,8 @@
 	<em>{{ times.0.invoice.client.name }}, {{ times.0.invoice.client.title }}</em><br>
 	{{ times.0.invoice.client.email }}
 </div>
-
 <div id="main">
 <table style="border-collapse:collapse;">
-
 {% for time in times %}
 	{% ifchanged time.project.pname %}
 	<tr><td colspan="6" class="projecthead">Project: <strong>{{ time.project.pname }}</strong></td></tr>
@@ -58,7 +87,7 @@ Notes: {{ times.0.invoice.notes }}
 {% endif %}
 </div>
 <div class="checksum">
-	<img style="float:left; margin: 0 10px 0 0;" src="http://chart.apis.google.com/chart?cht=qr&chs=80x80&chl={{ times.0.invoice.checksum }}&chld=H|0"><br>
+<img src="/qr?hashish={{ times.0.invoice.checksum}}&checksum=1" style="float:left; margin: 0 20px 20px 0" width="80"><br>
 	<span>Checksum:<br>{{ times.0.invoice.checksum }}</span>
 </div>
 </div> <!-- /#main -->

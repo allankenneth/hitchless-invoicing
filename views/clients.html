@@ -10,30 +10,15 @@
 			href="/css/mobile.css">
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="/scripts/hitchless.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="scripts/jquery-1.6.2.min.js"><\/script>')</script>
+    <script type="text/javascript" src="/scripts/hitchless.js"></script>
+
 </head>
 <body>
 <section id="container">
-{% if syncmessage %}
-<h1><a href="/">&bull;</a> New Contacts <a class="help" href="#" title="These contacts are in the shared contact list, in the group 'Clients.' but are not yet managed by the invoicing system.">?</a></h1>
-<section class="newclients">
-{% for mess in syncmessage %}
-<form method="post" action="/client" class="addclient">
-	<div>
-	  <input type="hidden" name="business" value="{{mess.0}}">
-	  <input type="hidden" name="name" value="{{mess.1}}">
-	  <input type="hidden" name="title" value="{{mess.2}}">
-	  <input type="hidden" name="email" value="{{mess.3}}">
-	  <input type="hidden" name="notes" value="{{mess.4}}">
-	  <button>Add {{mess.0}}</button>
-	</div>
-</form>
-{% endfor %}
-</section>
-{% else %}
-<h1><a id="sync" href="/?sync=1">&#9851;</a></h1>
-{% endif %}
+
+<h1>Contacts</h1>
 <section id="main">
 <ul id="clientlist">
 {% if clients %}
@@ -41,21 +26,22 @@
 	<li><a href="dashboard?clientkey={{ client.key }}#projects">{{ client.business }}</a></li>
 {% endfor %}
 {% else %}
-	<p>No contacts and/or can't connect to Google Contacts to import any.</p>
+	<p>No contacts.</p>
 {% endif %}
 </ul>
-<!--
+
 <form method="post" action="/client" class="addclient">
-	<div>
-	  <input type="hidden" name="business" value="Rather Good Design">
-	  <input type="hidden" name="name" value="Amy Rutherford">
-	  <input type="hidden" name="title" value="Owner">
-	  <input type="hidden" name="email" value="amy@rathergood.ca">
-	  <input type="hidden" name="notes" value="Sexy lady.">
-	  <button>Add Amy</button>
-	</div>
+    <fieldset>
+        <legend>Add a Client</legend>
+        <div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
+        <div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
+        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
+        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
+        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
+        <button>Add Client</button>
+    </fieldset>
 </form>
--->
+
 </section> <!-- /#main -->
 <nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
 </section> <!-- /#container -->
