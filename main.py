@@ -120,15 +120,9 @@ class MainPage(webapp.RequestHandler):
         if user:
             clients_query = Clients.all()
             clientlist = clients_query.fetch(100)
-            if self.request.get('sync'):
-                gclients = ClientHandler()
-                ssynk = gclients.synchro()
-            else:
-                ssynk = ''
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
             template_values = {
-                'syncmessage': ssynk,
                 'clients': clientlist,
                 'username': user.nickname(),
                 'useremail': user.email(),
@@ -151,15 +145,6 @@ class MainPage(webapp.RequestHandler):
 
 
 class ClientHandler(webapp.RequestHandler):
-    def get(self):
-        gconnect = Gconnection()
-        grouplist = gconnect.groups()
-        template_values = {
-            'groups': grouplist,
-        }
-        path = os.path.join(os.path.dirname(__file__), 
-                            'views/client-group.html')
-        self.response.out.write(template.render(path, template_values))
 
     def post(self):
         client = Clients()
@@ -169,42 +154,8 @@ class ClientHandler(webapp.RequestHandler):
         client.email = self.request.get('email')
         client.notes = self.request.get('notes')
         client.put()
-        action = '/?sync=1'
+        action = '/'
         self.redirect(action)
-
-    def synchro(self):
-        try:
-            clientlist = list()
-            gconnect = Gconnection()
-            contactlist = gconnect.contacts()
-            response = list()
-            if contactlist != 0:
-                for contact in contactlist:
-                    local_query = Clients.all()
-                    local_query.filter('business =', contact[0])
-                    local = local_query.fetch(100)
-                    if local:
-                        for locontact in local:
-                            if locontact.email == contact[3]:
-                                foobar = ''
-                        else:
-                            # Odd that I choose to use gql here and nowhere else
-                            client_query = Clients.gql("WHERE business = :1",
-                                                      locontact.business)
-                            client_result = client_query.fetch(1)
-                            client = client_result[0]
-                            client.email = db.Text(contact[3])
-                            client.put()
-                            updatedbus = [locontact.business+' Updated']
-                            response.append(updatedbus)
-                else:
-                    response.append(contact)
-            else:
-                response = 'Failed.'
-            return response
-        except:
-            response = ''
-            return response
 
 
 class DashboardHandler(webapp.RequestHandler):
