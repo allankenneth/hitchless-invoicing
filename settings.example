@@ -1,3 +1,4 @@
+# RENAME THIS FILE TO SETTINGS.PY when implementing.
 APP = {
     "hitchless_version": "0.1",
     "html_type": "text/html",
