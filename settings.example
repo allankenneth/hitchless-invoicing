@@ -24,11 +24,6 @@ COMPANY = {
     "province": "BC",
     "code": "V8V 1T5"
 }
-CONTACTS = {
-    "email": "you@yourdomain.com",
-    "pass": "yourpassword",
-    "groupurl": "http://www.google.com/m8/feeds/groups/you%40yourdomain.com/base/7ebf424208e812dd"
-}
 CAL = {
     "default_calendar": "https://www.google.com/calendar/feeds/yourdomain.com_thhtkptl5omtvfejgunshguvs0%40group.calendar.google.com/private/full",
     "email": "you@yourdomain.com",
