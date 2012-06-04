@@ -13,14 +13,31 @@
   <div class="navbar-inner">
     <div class="container">
       <a class="brand">hitchless Invoicing</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+        	<li class="dropdown">
+	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	        		Clients 
+	        		<b class="caret"></b>
+	        	</a>
+	        	<ul class="dropdown-menu">
+				{% for client in clients %}
+					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
+						<a href="/dashboard?clientkey={{ client.key }}">{{ client.business }} </a>
+					</li>
+				{% endfor %}
+				</ul>
+			</li>
+        </ul>
+      </div><!--/.nav-collapse -->
     </div>
   </div>
 </div>
 
 <div class="container">
 
-	<h1>Contacts</h1>
 	<section class="row-fluid">
+<!--
 		<ul id="clientlist">
 		{% if clients %}
 		{% for client in clients %}
@@ -30,6 +47,7 @@
 			<p>No contacts.</p>
 		{% endif %}
 		</ul>
+-->
 		
 		<form method="post" action="/client" class="addclient">
 		    <fieldset>
@@ -46,5 +64,19 @@
 	</section> <!-- /#main -->
 	<nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
 </section> <!-- /.row-fluid -->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
+<script src="/assets/js/bootstrap-tab.js"></script>
+<!-- <script src="/assets/js/bootstrap-tooltip.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-popover.js"></script> -->
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
+<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>

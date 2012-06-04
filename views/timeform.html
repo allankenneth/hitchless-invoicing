@@ -12,7 +12,7 @@
 				<legend></legend>
 			    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
 			    <input type="text" name="service" id="servicename" size="20" placeholder="Service name">
-				$<input type="number" name="rate" size="5" placeholder="Rate">
+				$<input type="number" name="rate" class="input-min" size="5" placeholder="Rate">
 				/&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
 				<input type="submit" value="Add Service">	
 			</fieldset>
@@ -23,7 +23,7 @@
 		  </div>
 		</div> <!-- /.modal -->
 		
-		<form action="/timesheet" method="post">
+		<form action="/timesheet" class="well" method="post">
 			<fieldset>
 				<legend>Add Time</legend>
 				<input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
@@ -45,8 +45,8 @@
 					{% endfor %}
 				</select>
 				<a data-toggle="modal" href="#addservice">+</a><br>
-				<input type="number" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
-				<input type="submit" value="Add Time">
+				<input type="number" class="input-mini" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
+				<input type="submit" class="btn" value="Add Time">
 			</fieldset>
 		</form>
 		</div>  <!-- /#timetrack -->

@@ -20,18 +20,22 @@
       <span class="brand">{{ businessname }}</span>
       <div class="nav-collapse">
         <ul class="nav">
-        	<li><a data-toggle="modal" href="#clientinfo">Contact</a>
+        	<li>
+        		<a data-toggle="modal" href="#clientinfo">Contact</a>
         	</li>
         	<li class="dropdown">
-        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Clients <b class="caret"></b></a>
-        	<ul class="dropdown-menu">
-			{% for client in allclients %}
-				<li 
-				{% ifequal client.business businessname %} class="active" {% endifequal %}
-				><a href="/dashboard?clientkey={{ client.key }}">{{ client.business }} </a></li>
-			{% endfor %}
-				<li><a href="/">All</a></li>
-			</ul>
+	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	        		Clients 
+	        		<b class="caret"></b>
+	        	</a>
+	        	<ul class="dropdown-menu">
+				{% for client in allclients %}
+					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
+						<a href="/dashboard?clientkey={{ client.key }}">{{ client.business }} </a>
+					</li>
+				{% endfor %}
+					<li><a href="/">All</a></li>
+				</ul>
 			</li>
         </ul>
       </div><!--/.nav-collapse -->
@@ -40,7 +44,7 @@
 </div>
     
 
-<div class="container">
+<div class="container-fluid">
 
 
 <div class="modal hide fade" id="clientinfo">
@@ -73,38 +77,22 @@
 <div class="tab-content">
 	{% if invoices %}
 	<div id="invoices" class="tab-pane">
-	<!-- <header><h1>Invoices</h1></header> -->
-	
-	<!--
-	<nav id="invoicefilter" class="filter">
-	    <a href="#" class="showallinvoices">All</a>
-	    <a href="#paid" class="filterinvoices">Paid</a>
-	    <a href="#draft" class="filterinvoices">Draft</a>
-	    <a href="#invoiced" class="filterinvoices">Sent</a>
-	</nav>
-	-->
-	
-	{% for invoice in invoices %}
-	<div id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">
-	
-	<a href="/invoice?iid={{ invoice.key }}" class="total">
-	    #{{ invoice.inum }} 
-	    <span>${{ invoice.totalbill }}</span>
-	    {{ invoice.date }} -
-	    {{ invoice.status }}
-	</a>
-	
-	
-	
-	</div>
-	{% endfor %}
-	
+		{% for invoice in invoices %}
+		<div id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
+			<a href="/invoice?iid={{ invoice.key }}" class="total">
+			    #{{ invoice.inum }} 
+			    <span>${{ invoice.totalbill }}</span>
+			    {{ invoice.date }} -
+			    {{ invoice.status }}
+			</a>
+		</div>
+		{% endfor %}
 	</div> <!-- /#invoices -->
 	{% endif %}
-	<div id="projects" class="tab-pane">
-	<!-- <header><h1>Projects</h1></header> -->
 	
-	<form action="/project" method="post" id="addproject">
+	<div id="projects" class="tab-pane">
+	
+	<form action="/project" method="post" id="addproject" class="well">
 		<fieldset>
 			<legend>Add a project</legend>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
@@ -114,7 +102,7 @@
 		</fieldset>
 	</form>
 	{% if projectkeys %}
-	<form action="/invoice" method="post" id="addinvoice">
+	<form action="/invoice" method="post" id="addinvoice" class="well">
 		<fieldset>
 			<legend>Projects</legend>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
@@ -146,20 +134,19 @@
 </div> <!-- /.tab-content -->
 </div> <!-- /.container -->
 
-
-    <script src="/assets/js/jquery.js"></script>
-    <script src="/assets/js/bootstrap-transition.js"></script>
-    <script src="/assets/js/bootstrap-alert.js"></script>
-    <script src="/assets/js/bootstrap-modal.js"></script>
-    <script src="/assets/js/bootstrap-dropdown.js"></script>
-    <script src="/assets/js/bootstrap-scrollspy.js"></script>
-    <script src="/assets/js/bootstrap-tab.js"></script>
-    <script src="/assets/js/bootstrap-tooltip.js"></script>
-    <script src="/assets/js/bootstrap-popover.js"></script>
-    <script src="/assets/js/bootstrap-button.js"></script>
-    <script src="/assets/js/bootstrap-collapse.js"></script>
-    <script src="/assets/js/bootstrap-carousel.js"></script>
-    <script src="/assets/js/bootstrap-typeahead.js"></script>
-    <script src="/assets/js/hitchless.js"></script>
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
+<script src="/assets/js/bootstrap-tab.js"></script>
+<!-- <script src="/assets/js/bootstrap-tooltip.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-popover.js"></script> -->
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
+<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>
