@@ -1,0 +1,37 @@
+APP = {
+    "hitchless_version": "0.1",
+    "html_type": "text/html",
+    "charset": "utf-8",
+    "title": "hitchless Invoicing",
+    "gaename": "yourappspotname",
+    "author": "Allan Haggett",
+    # This must be the email address of a registered administrator for the 
+    # application due to mail api restrictions.
+    "email": "you@yourdomain.com",
+    "description": "Invoicing For You.",
+    "URL": "https://yourappspotname.appspot.com/",
+    "gcalenabled": True,
+    "taxnumber": "1221344HST",
+    "taxrate": .12
+}
+COMPANY = {
+    "logopath": "/images/logo.png",
+    "name": "Your Company Name",
+    "email": "you@yourdomain.com",
+    "street": "311 - 123 Test St.",
+    "city": "Victoria",
+    "province": "BC",
+    "code": "V8V 1T5"
+}
+CONTACTS = {
+    "email": "you@yourdomain.com",
+    "pass": "yourpassword",
+    "groupurl": "http://www.google.com/m8/feeds/groups/you%40yourdomain.com/base/7ebf424208e812dd"
+}
+CAL = {
+    "default_calendar": "https://www.google.com/calendar/feeds/yourdomain.com_thhtkptl5omtvfejgunshguvs0%40group.calendar.google.com/private/full",
+    "email": "you@yourdomain.com",
+    "pass": "yourpassword",
+    "GMToffset": 7
+}
+
