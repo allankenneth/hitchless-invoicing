@@ -4,14 +4,14 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /css
-  static_dir: views/css
+- url: /assets/css
+  static_dir: views/assets/css
 
-- url: /scripts
-  static_dir: views/scripts
+- url: /assets/js
+  static_dir: views/assets/js
 
-- url: /images
-  static_dir: views/images
+- url: /assets/img
+  static_dir: views/assets/img
   
 - url: .*
   script: main.py

@@ -3,33 +3,36 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{ client.0.business }} ~ {{ title }}</title>
-	<link rel="stylesheet" href="css/base.css" type="text/css">
-
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width,user-scalable=no">
-	
-    <script type="text/javascript" src="scripts/jquery-1.6.2.min.js"></script>
-	<script type="text/javascript" src="scripts/hitchless.js"></script>
+	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
 </head>
 <body id="projectlist">
-<nav id="clientnav">
-	<ul>
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" id="showcinfo" href="#clientinfo">{{ client.0.business }}</a>
+      <div class="nav-collapse">
+        <ul class="nav">
 		{% for client in allclients %}
-		<li><a href="/dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
+			<li {% ifequal client.business client.0.business %} class="active" {% endifequal %}><a href="/dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
 		{% endfor %}
-		<li><a href="/">All</a></li>
-	</ul>
-</nav>
+			<li><a href="/">All</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+    
 
-<section id="masthead">
-	<header>
-		<h1>
-			<a href="#clientinfo" id="showcinfo">{{ client.0.business }}</a> 
-			<a class="clientmenu" href="#clientnav"><img src="/images/arrow.png" alt="Show Clients"></a>
-		</h1>
-	</header>
+<div class="container">
 
-</section>
 
 <div id="clientinfo" class="vcard">
 	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
@@ -38,7 +41,7 @@
 </div>
 
 
-<div id="container">
+<div class="container">
 <nav id="nav">
 	<ul>
 <!-- 		<li><a class="clientmenu" href="#clientnav">clients</a></li> -->
@@ -123,6 +126,6 @@
 {% endif %}
 </div>
 
-
+</div>
 </body>
 </html>

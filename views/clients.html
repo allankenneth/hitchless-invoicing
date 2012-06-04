@@ -3,47 +3,48 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Hitchless</title>
-	<link rel="stylesheet" href="css/base.css" type="text/css">
-	<link rel="stylesheet" 
-			type="text/css" 
-			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
-			href="/css/mobile.css">
+	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
 	<meta name="viewport" content="width=device-width,user-scalable=no">
-
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="scripts/jquery-1.6.2.min.js"><\/script>')</script>
-    <script type="text/javascript" src="/scripts/hitchless.js"></script>
-
 </head>
 <body>
-<section id="container">
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="/">hitchless Invoicing</a>
+    </div>
+  </div>
+</div>
 
-<h1>Contacts</h1>
-<section id="main">
-<ul id="clientlist">
-{% if clients %}
-{% for client in clients %}
-	<li><a href="dashboard?clientkey={{ client.key }}#projects">{{ client.business }}</a></li>
-{% endfor %}
-{% else %}
-	<p>No contacts.</p>
-{% endif %}
-</ul>
+<div class="container">
 
-<form method="post" action="/client" class="addclient">
-    <fieldset>
-        <legend>Add a Client</legend>
-        <div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
-        <div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
-        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
-        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
-        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
-        <button>Add Client</button>
-    </fieldset>
-</form>
-
-</section> <!-- /#main -->
-<nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
-</section> <!-- /#container -->
+	<h1>Contacts</h1>
+	<section class="row-fluid">
+		<ul id="clientlist">
+		{% if clients %}
+		{% for client in clients %}
+			<li><a href="dashboard?clientkey={{ client.key }}#projects">{{ client.business }}</a></li>
+		{% endfor %}
+		{% else %}
+			<p>No contacts.</p>
+		{% endif %}
+		</ul>
+		
+		<form method="post" action="/client" class="addclient">
+		    <fieldset>
+		        <legend>Add a Client</legend>
+		        <div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
+		        <div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
+		        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
+		        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
+		        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
+		        <button>Add Client</button>
+		    </fieldset>
+		</form>
+	
+	</section> <!-- /#main -->
+	<nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
+</section> <!-- /.row-fluid -->
 </body>
 </html>
