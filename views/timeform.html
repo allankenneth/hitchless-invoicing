@@ -1,16 +1,28 @@
 	<div id="timeform" class="tab-pane">
 		<!-- <header><h1>Tracker</h1></header> -->
 		<div id="timetrack">
-		<form id="addservice" action="/service" method="post">
-		<fieldset>
-			<legend>Add Service</legend>
-		    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
-		    <input type="text" name="service" size="20" placeholder="Service name">
-			$<input type="number" name="rate" size="5" placeholder="Rate">
-			/&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
-			<input type="submit" value="Add Service">	
-		</fieldset>
-		</form>
+		<div class="modal hide fade" id="addservice">
+		 <div class="modal-header">
+		     <button type="button" class="close" data-dismiss="modal">×</button>
+		 	<h3>Add Service</h3>
+		 </div>
+		 <div class="modal-body">
+			<form id="addservice" action="/service" method="post">
+			<fieldset>
+				<legend></legend>
+			    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
+			    <input type="text" name="service" id="servicename" size="20" placeholder="Service name">
+				$<input type="number" name="rate" size="5" placeholder="Rate">
+				/&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
+				<input type="submit" value="Add Service">	
+			</fieldset>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#" class="btn" data-dismiss="modal">Close</a>
+		  </div>
+		</div> <!-- /.modal -->
+		
 		<form action="/timesheet" method="post">
 			<fieldset>
 				<legend>Add Time</legend>
@@ -32,7 +44,7 @@
 					<option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
 					{% endfor %}
 				</select>
-				<a id="servicemenu" href="#addservice">+</a><br>
+				<a data-toggle="modal" href="#addservice">+</a><br>
 				<input type="number" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
 				<input type="submit" value="Add Time">
 			</fieldset>
