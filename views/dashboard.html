@@ -78,23 +78,39 @@
 <div class="tab-content">
 	{% if invoices %}
 	<div id="invoices" class="tab-pane active">
-	<ul class="nav nav-tabs nav-stacked">
+	<table class="table table-striped">
+	<tr>
+		<th>Invoice #</th>
+		<th>Total</th>
+		<th>Date</th>
+		<th>Status</th>
+		<th></th>
+	</tr>
 		{% for invoice in invoices %}
-		<li id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
-			<a href="/invoice?iid={{ invoice.key }}" class="total">
+		<tr>
+		<td id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
 			    <span class="badge">#{{ invoice.inum }}</span>
+		</td>
+		<td>
 			    <strong>${{ invoice.totalbill }}</strong>
+		</td>
+		<td>
 			    {{ invoice.date }}
+		</td>
+		<td>
 				<span class="label 
 			    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
 			    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
 			    {% ifequal invoice.status 'sent' %} label-important {% endifequal %}
 			    ">{{ invoice.status }}</span>
-			</a>
+		</td>
+		<td>
+			<a href="/invoice?iid={{ invoice.key }}" class="total">View</a>
 		    
-		</li>
+		</td>
+		</tr>
 		{% endfor %}
-		</ul>
+		</table>
 	</div> <!-- /#invoices -->
 	{% endif %}
 	

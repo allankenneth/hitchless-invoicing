@@ -20,6 +20,7 @@
       <a class="brand">hitchless Invoicing</a>
       <div class="nav-collapse">
         <ul class="nav">
+        	<li class="pull-right"><a href="{{ url }}">{{ url_linktext }}</a></li>
         	<li class="dropdown">
 	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	        		Clients 
@@ -62,12 +63,12 @@
 		        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
 		        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
 		        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
-		        <button>Add Client</button>
+		        <button class="btn btn-primary">Add Client</button>
 		    </fieldset>
 		</form>
 	
 	</section> <!-- /#main -->
-	<nav><a href="{{ url }}">{{ url_linktext }}</a></nav>
+
 </section> <!-- /.row-fluid -->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/bootstrap-transition.js"></script>

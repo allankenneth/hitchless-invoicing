@@ -33,8 +33,8 @@
 	                Delete
 	            </a></li>
         </ul>
-        <div id="invoicemenu"> 
-	     	<form method="get" action="/invoice" class="mark statuschanger">
+
+	     	<form method="get" action="/invoice" class="navbar-form pull-left">
 	        <div>
 	            <input type="hidden" name="action" value="statusupdate">
 				<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
@@ -45,10 +45,10 @@
 					<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
 				{% endfor %}
 				</select>
-				<button>change</button>
+				<button class="btn btn-mini">change</button>
 			</div>
 			</form>
-	    </div> <!-- /#invoicemenu -->
+
       </div><!--/.nav-collapse -->
     </div>
   </div>
