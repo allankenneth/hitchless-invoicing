@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
 	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
 	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body id="projectlist">
 
@@ -50,11 +51,11 @@
 <div class="modal hide fade" id="clientinfo">
  <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Contact Info</h3>
+    <h3>{{businessname}}</h3>
   </div>
   <div class="modal-body">
 	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
-	<div class="email"><a href="mailto:{{ client.0.email }}">{{ client.0.email }}</a></div>
+	<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
 	<div class="notes">{{ client.0.notes }}</div>
   </div>
   <div class="modal-footer">
@@ -67,7 +68,7 @@
 
 <ul class="nav nav-pills">
 {% if invoices %}
-	<li><a href="#invoices" data-toggle="tab">invoices</a></li>
+	<li class="active"><a href="#invoices" data-toggle="tab">invoices</a></li>
 {% endif %}
 	<li><a href="#projects" data-toggle="tab">projects</a></li>
 {% if projectkeys %}
@@ -76,17 +77,24 @@
 </ul>
 <div class="tab-content">
 	{% if invoices %}
-	<div id="invoices" class="tab-pane">
+	<div id="invoices" class="tab-pane active">
+	<ul class="nav nav-tabs nav-stacked">
 		{% for invoice in invoices %}
-		<div id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
+		<li id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
 			<a href="/invoice?iid={{ invoice.key }}" class="total">
-			    #{{ invoice.inum }} 
-			    <span>${{ invoice.totalbill }}</span>
-			    {{ invoice.date }} -
-			    {{ invoice.status }}
+			    <span class="badge">#{{ invoice.inum }}</span>
+			    <strong>${{ invoice.totalbill }}</strong>
+			    {{ invoice.date }}
+				<span class="label 
+			    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
+			    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
+			    {% ifequal invoice.status 'sent' %} label-important {% endifequal %}
+			    ">{{ invoice.status }}</span>
 			</a>
-		</div>
+		    
+		</li>
 		{% endfor %}
+		</ul>
 	</div> <!-- /#invoices -->
 	{% endif %}
 	
@@ -98,28 +106,27 @@
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
 			<input type="text" id="pname" name="pname" size="25" placeholder="Project name">
 	<!--		<label>Budget <input type="number" id="budget" name="budget" size="5" placeholder="hrs"></label> -->
-			<input type="submit" value="Add Project">
+			<input type="submit" class="btn btn-primary" value="Add Project">
 		</fieldset>
 	</form>
 	{% if projectkeys %}
 	<form action="/invoice" method="post" id="addinvoice" class="well">
 		<fieldset>
 			<legend>Projects</legend>
-			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<input id="newinvoice" type="submit" value="New Invoice">
+			
 			<div>
-			{% for project in projectkeys %}
-			<div class="project">
+				<input id="newinvoice" class="btn" type="submit" value="New Invoice">
+				<input type="hidden" name="clientkey" value="{{ clientkey }}">
+				{% for project in projectkeys %}
+				<div class="project">
 	            <a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}">x</a>
 				<input class="invoiceproject" 
 						type="checkbox" 
 						name="projects" 
 						value="{{ project.key }}" {% ifequal project.status 'empty' %} disabled {% endifequal %}>
 				<a class="sheet" href="/timesheet?pid={{ project.key }}">{{ project.pname }}</a>
-				<div class="sheetplaceholder">
-					
+				<div class="sheetplaceholder"></div>
 				</div>
-			</div>
 			{% endfor %}
 			</div>		
 		</fieldset>

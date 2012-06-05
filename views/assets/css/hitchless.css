@@ -1,3 +1,27 @@
 legend {
-/* 	margin-bottom: 10px; */
+	border-bottom: 0;
+}
+#newinvoice {
+	display: none;
+}
+.companydetails {
+
+}
+#main {
+	clear: both;
+	margin: 0 auto 40px auto;
+}
+.lineitem td {
+	padding: 10px 0;
+}
+.statuschange {
+	margin-bottom: 0;
+}
+#message {
+	background: #D7F5E8;
+	border-radius: 3px;
+	font-size: 20px;
+	margin-bottom: 20px;
+	padding: 30px;
+	text-align: center;
 }

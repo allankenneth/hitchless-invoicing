@@ -2,70 +2,93 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Hitchless Invoicing</title>
-	<link rel="stylesheet" href="css/base.css" type="text/css">
-	<link rel="stylesheet" 
-			type="text/css" 
-			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
-			href="/css/mobile.css">
+	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body id="invoice">
-    <div id="invoicemenu"> 
-     	<form method="get" action="/invoice" class="mark statuschanger">
-        <div>
-            <a href="/dashboard?clientkey={{ times.0.invoice.client.key }}">
-                Dashboard
-            </a>
-            {% if times.0.invoice.checksum  %}
-            <a class="send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
-                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
-            </a>
-            {% endif %}
-            {% if not times.0.invoice.checksum  %}
-            <a class="send" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
-                Finalize
-            </a>
-            {% endif %}
-            <a class="deleteitem" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
-                x
-            </a>
-            <input type="hidden" name="action" value="statusupdate">
-			<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
-			<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
-			<!-- {{ invoice.status }} -->
-			<select class="statuschange" name="status">
-			{% for status in statuses %}
-				<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
-			{% endfor %}
-			</select>
-			<button>change</button>
-		</div>
-	</form>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="/dashboard?clientkey={{ times.0.invoice.client.key }}">{{ times.0.invoice.client.business }}</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+	        {% if times.0.invoice.checksum  %}
+	           <li> <a class="send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
+	            </a></li>
+	            {% endif %}
+	            {% if not times.0.invoice.checksum  %}
+	            <li><a class="send" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	                Finalize
+	            </a></li>
+	            {% endif %}
+	            <li><a class="deleteitem" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	                Delete
+	            </a></li>
+        </ul>
+        <div id="invoicemenu"> 
+	     	<form method="get" action="/invoice" class="mark statuschanger">
+	        <div>
+	            <input type="hidden" name="action" value="statusupdate">
+				<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
+				<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
+				<!-- {{ invoice.status }} -->
+				<select class="statuschange" name="status">
+				{% for status in statuses %}
+					<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
+				{% endfor %}
+				</select>
+				<button>change</button>
+			</div>
+			</form>
+	    </div> <!-- /#invoicemenu -->
+      </div><!--/.nav-collapse -->
     </div>
+  </div>
+</div>
+
+{% if message %}
 <div id="message">{{ message }}</div>
-<div id="container">
-<img src="/qr?hashish={{ times.0.invoice.checksum}}" style="float:left; margin: 0 20px 20px 0" width="140">
+{% endif %}
+<div class="container">
+<div class="hero-unit">
 <h1>Invoice #{{ times.0.invoice.inum }}</h1>
-<h2>{{ times.0.invoice.date }}</h2>
-<div class="companydetails">
+<div class="row-fluid">
+<div class="span2">
+	<h2>{{ times.0.invoice.date }}</h2>
+	<img src="/qr?hashish={{ times.0.invoice.checksum}}" width="140">
+
+</div>
+
+<div class="clientdetails span7">
+	
+	<h2>{{ times.0.invoice.client.business }}</h2>
+	<h3>{{ times.0.invoice.client.name }}, {{ times.0.invoice.client.title }}</h3>
+	<p>{{ times.0.invoice.client.email }}</p>
+</div>
+<div class="span3">
 	<img src="{{ logopath }}" alt="company logo">
-	<p class="coname">{{ companyname }}</p>
-	<p>{{ companyaddress }}</p>
-	<p>{{ companycity }}, {{ companyprovince }}</p>
-	<p>{{ companycode }}</p>
+	<p class="coname">{{ companyname }}<br>
+	{{ companyaddress }}<br>
+	{{ companycity }}, {{ companyprovince }}<br>
+	{{ companycode }}</p>
 </div>
-<div class="clientdetails">
-	<strong>{{ times.0.invoice.client.business }}</strong><br>
-	<em>{{ times.0.invoice.client.name }}, {{ times.0.invoice.client.title }}</em><br>
-	{{ times.0.invoice.client.email }}
 </div>
-<div id="main">
-<table style="border-collapse:collapse;">
+
+</div>
+<table id="main" class="table-striped">
 {% for time in times %}
 	{% ifchanged time.project.pname %}
 	<tr><td colspan="6" class="projecthead">Project: <strong>{{ time.project.pname }}</strong></td></tr>
 	{% endifchanged %}
-	<tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+	<tr class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} lineitem">
 		<td width="200">{{ time.date }}</td>
 		<td width="300">{{ time.note }}</td>
 		<td>{{ time.hours }}<span>x</span></td>
@@ -75,22 +98,36 @@
 	</tr>
 {% endfor %}
 <tr><td colspan="2" class="sub">Total Hours:</td><td>{{ totalhours }}</td><td></td><td></td><td></td></tr>
+<tr><td colspan="6" class="separator"></td></tr>
+
 <tr class="sub"><td colspan="5">Subtotal:</td><td>${{ subtotal }}</td></tr>
 <tr class="sub"><td colspan="5">Tax:</td><td>${{ tax }}</td></tr>
 <tr class="sub"><td colspan="5">Total:</td><td>${{ totalinvoice }}</td></tr>
 </table> 
-<div>
 <!-- Status: {{ times.0.invoice.status }} -->
 {% if times.0.invoice.notes %}
 <br>
 Notes: {{ times.0.invoice.notes }}
 {% endif %}
-</div>
 <div class="checksum">
 <img src="/qr?hashish={{ times.0.invoice.checksum}}&checksum=1" style="float:left; margin: 0 20px 20px 0" width="80"><br>
 	<span>Checksum:<br>{{ times.0.invoice.checksum }}</span>
 </div>
 </div> <!-- /#main -->
 </div>
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
+<script src="/assets/js/bootstrap-tab.js"></script>
+<!-- <script src="/assets/js/bootstrap-tooltip.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-popover.js"></script> -->
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
+<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>

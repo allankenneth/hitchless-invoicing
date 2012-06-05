@@ -73,6 +73,16 @@
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
+
+
+
+  .companydetails {
+    float: none;
+  }
+  
+  
+  
+  
   .visible-tablet {
     display: inherit !important;
   }
@@ -88,6 +98,13 @@
 }
 
 @media (max-width: 480px) {
+  .companydetails {
+    float: none;
+  }
+
+
+
+
   .nav-collapse {
     -webkit-transform: translate3d(0, 0, 0);
   }
@@ -136,6 +153,13 @@
 }
 
 @media (max-width: 767px) {
+  .companydetails {
+    float: none;
+  }
+
+
+
+
   body {
   	padding-top: 0;
     padding-right: 20px;
@@ -200,6 +224,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
+
+
+
   .row {
     margin-left: -20px;
     *zoom: 1;
