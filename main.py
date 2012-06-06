@@ -70,18 +70,7 @@ class Projects(db.Model):
     enddate = db.StringProperty()
 
 
-class Time(db.Model):
-    #TODO Um, hello? date is a string?
-    project = db.ReferenceProperty(Projects)
-    date = db.StringProperty()
-    service = db.StringProperty()
-    rate = db.IntegerProperty()
-    rateunit = db.StringProperty()
-    hours = db.FloatProperty()
-    total = db.StringProperty()
-    worker = db.StringProperty()
-    note = db.StringProperty(multiline=True)
-    status = db.StringProperty(choices=set(["logged", "draft", "invoiced"]))
+
 
 
 class Invoices(db.Model):
@@ -99,19 +88,27 @@ class Invoices(db.Model):
     qrlink = db.BlobProperty()
     qrchecksum = db.BlobProperty()
 
-
-class InvoiceTime(db.Model):
-    # TODO Um, hello? date is a string?
+class Time(db.Model):
+    #TODO Um, hello? date is a string?
     invoice = db.ReferenceProperty(Invoices)
     project = db.ReferenceProperty(Projects)
+    date = db.StringProperty()
     service = db.StringProperty()
-    rate = db.FloatProperty()
+    rate = db.IntegerProperty()
     rateunit = db.StringProperty()
     hours = db.FloatProperty()
     total = db.StringProperty()
-    date = db.StringProperty()
     worker = db.StringProperty()
     note = db.StringProperty(multiline=True)
+    status = db.StringProperty(choices=set(["logged", "draft", "invoiced"]))
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 class MainPage(webapp.RequestHandler):
@@ -567,8 +564,8 @@ class InvoiceHandler(webapp.RequestHandler):
             invoice[0].qrlink = qlink
             invoice[0].qrchecksum = qchk
             invoice[0].put()
-            message = 'Finalized.'
-
+            #message = 'Finalized.'
+            message = 'Finalized. <a href="/invoice?iid='+self.request.get('iid')+'"><span class="icon-remove-sign"><span></a>'
 
 
         if (self.request.get('action') == "send"):
@@ -631,21 +628,22 @@ class InvoiceHandler(webapp.RequestHandler):
             
             
             # TODO a template or something? It's UI decision time!
-            message = 'Sent.'
+            #message = 'Sent.'
+            message = 'Sent. <a href="/invoice?iid='+self.request.get('iid')+'"><span class="icon-remove-sign"><span></a>'
 
         if self.request.get('action') == 'statusupdate':
             i = db.Key(self.request.get('iid'))
             update = db.get(i)
             update.status = self.request.get('status')
             update.put()
-            message = 'Updated as ' + self.request.get('status') + '. <a href="/invoice?iid='+self.request.get('iid')+'">dismiss</a>.'
+            message = 'Updated as ' + self.request.get('status') + '. <a href="/invoice?iid='+self.request.get('iid')+'"><span class="icon-remove-sign"><span></a>'
 #             action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#invoices'
 #             self.redirect(action)
 
 
         statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
         i = db.Key(self.request.get('iid'))
-        times_query = InvoiceTime.all()
+        times_query = Time.all()
         times_query.filter('invoice =', i)
         times = times_query.fetch(100)
         totalhours = 0
@@ -718,44 +716,32 @@ class InvoiceHandler(webapp.RequestHandler):
                 times_query.filter('project =', pkey)
                 times_query.filter('status =', 'logged')
                 times = times_query.fetch(100)
-                # setup some variables for below
-                status = []
-                # now looping through the times
-                # we're going to copy each time into the invoiceTime model
-                # Does this complicate things more than necessary? It seemed
-                # prudent to do when I coded this, but I can't really 
-                # remember why ... 
+                
                 for time in times:
+
+
+                    time.invoice = iid
+                    time.status = "invoiced"
+                    db.put(time)
+
                     billedtime = float(billedtime) + float(time.hours)
                     billedtotal = float(billedtotal) + float(time.total)
-                    itime = InvoiceTime()
-                    itime.invoice = iid
-                    itime.project = pkey
-                    itime.date = time.date
-                    itime.hours = time.hours
-                    itime.rate = float(time.rate)
-                    itime.rateunit = time.rateunit
-                    itime.service = time.service
-                    newtotal = float(time.total)
-                    newtotal = "%.2f" % newtotal
-                    itime.total = newtotal
-                    itime.worker = time.worker
-                    itime.note = time.note
-                    itime.put()
-                    time.status = "invoiced"
-                    status.append(time)
-                db.put(status)
+                    
                 project_update = db.get(pkey)
                 project_update.status = "empty"
                 project_update.put()
-            invoice_update = db.get(iid)
+            
+            
 
             totalhoursbilled = "%2.f" % billedtime
             totalbill = "%.2f" % billedtotal
             totalbill = float(totalbill)
+
+            invoice_update = db.get(iid)
             invoice_update.totalhours = float(totalhoursbilled)
             invoice_update.totalbill = totalbill
             invoice_update.put()
+
             project_update = db.get(pkey)
             project_update.billed = billedtime
             project_update.put()
@@ -782,7 +768,7 @@ class InvoiceGenerateHandler(webapp.RequestHandler):
 
         i = self.request.get('ichecksum')
         statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
-        times_query = InvoiceTime.all()
+        times_query = Time.all()
         times_query.filter('checksum =', i)
         times = times_query.fetch(100)
         totalhours = 0
