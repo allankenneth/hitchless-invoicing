@@ -77,7 +77,7 @@
 </ul>
 <div class="tab-content">
 	{% if invoices %}
-	<div id="invoices" class="tab-pane">
+	<div id="invoices" class="tab-pane span6">
 	<table class="table table-striped">
 	<tr>
 		<th>Invoice #</th>
@@ -101,7 +101,7 @@
 				<span class="label 
 			    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
 			    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
-			    {% ifequal invoice.status 'sent' %} label-important {% endifequal %}
+			    {% ifequal invoice.status 'sent' %} label-warning {% endifequal %}
 			    ">{{ invoice.status }}</span>
 		</td>
 		<td>

@@ -12,7 +12,7 @@ $(document).ready(function(){
 </script>
 </script>
 <!-- <a href="#close" class="close">x</a> -->
-<table class="table table-striped">
+<table class="table table-condensed">
 <tr>
 	
 	<th>Date</th>
@@ -23,7 +23,7 @@ $(document).ready(function(){
 </tr>
 
 {% for entry in time %}
-	<tr class="timeitems">
+	<tr class="timeitems" id="time-{{ entry.key.id }}">
 
 		<td>
 			{{ entry.date }} <!-- - {{ entry.status }} -->
@@ -36,7 +36,7 @@ $(document).ready(function(){
 		</td>
 	</tr>
 	<tr>
-		<td colspan="5" class="timenote" id="time-{{ entry.key.id }}"><hr>{{ entry.note }} </td>
+		<td colspan="5" class="note" style="padding-bottom: 15px;">{{ entry.note }} </td>
 	</tr>
 		
 	</tr>

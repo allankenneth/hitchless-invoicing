@@ -9,6 +9,7 @@
 
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
+from google.appengine.api import conversion
 from google.appengine.api import urlfetch
 from google.appengine.ext import webapp
 from google.appengine.api import users
@@ -567,6 +568,9 @@ class InvoiceHandler(webapp.RequestHandler):
             invoice[0].qrchecksum = qchk
             invoice[0].put()
             message = 'Finalized.'
+
+
+
         if (self.request.get('action') == "send"):
             # Get client information
             ck = db.Key(self.request.get('cid'))
@@ -587,18 +591,40 @@ class InvoiceHandler(webapp.RequestHandler):
             invoiceurl = settings.APP["URL"]
             invoiceurl += "invoice-gen?ichecksum="
             invoiceurl += invoicechecksum
-            qrattachname = invoice[0].checksum + ".png"
-            emailsubject = "Invoice #" + str(invoice[0].inum) + " for $"
-            emailsubject += invoicetotal
-            emailsender = settings.COMPANY["name"]
-            emailsender += "<" + settings.COMPANY["email"] + ">"
-            message = mail.EmailMessage(sender=emailsender, subject=emailsubject)
-            message.to = "Allan Kenneth <allankh@gmail.com>"
-            message.attachments = [(qrattachname,invoice[0].qrchecksum)]
-            message.body = "Dear " + clientname + ",\n\n"
-            message.body += "To view your invoice, please click the link below:\n\n"
-            message.body += invoiceurl
-            message.send()
+
+            attach = urlfetch.fetch("http://google.com")          
+            
+            asset = conversion.Asset("text/html", attach.content, "invoice.html")
+            conversion_obj = conversion.Conversion(asset, "application/pdf")
+            
+            rpc = conversion.create_rpc()
+            conversion.make_convert_call(rpc, conversion_obj)
+            
+            result = rpc.get_result()
+            if result.assets:
+              # Note: in most cases, we will return data all in one asset.
+              # Except that we return multiple assets for multiple pages image.
+              for asset in result.assets:
+                invoiceattachment = asset.data
+                
+              attachname = settings.COMPANY["name"] + "-invoice#" + str(invoice[0].inum) + ".pdf"
+              emailsubject = "Invoice #" + str(invoice[0].inum) + " for $"
+              emailsubject += invoicetotal
+              emailsender = settings.COMPANY["name"]
+              emailsender += "<" + settings.COMPANY["email"] + ">"
+              message = mail.EmailMessage(sender=emailsender, subject=emailsubject)
+              message.to = "Allan Kenneth <allankh@gmail.com>"
+              message.attachments = [(attachname,invoiceattachment)]
+              message.body = "Dear " + clientname + ",\n\n"
+              message.body += "To view your invoice, please click the link below:\n\n"
+              message.body += invoiceurl
+              message.send()
+              
+            else:
+              message = result.error_code + " - " + result.error_text
+            
+            
+            
             # TODO a template or something? It's UI decision time!
             message = 'Sent.'
 
@@ -607,7 +633,7 @@ class InvoiceHandler(webapp.RequestHandler):
             update = db.get(i)
             update.status = self.request.get('status')
             update.put()
-            action = '/dashboard?clientkey=' + self.request.get('clientkey')
+            action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#invoices'
             self.redirect(action)
         else:
             statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
