@@ -344,7 +344,7 @@ class TimesheetHandler(webapp.RequestHandler):
             pi = db.Key(self.request.get('pid'))
             time_query = Time.all()
             time_query.filter('project =', pi)
-            time_query.filter('status =', 'logged')
+#             time_query.filter('status =', 'logged')
             time_query.order('-date')
             time = time_query.fetch(100)
             totalhours = 0
@@ -592,9 +592,12 @@ class InvoiceHandler(webapp.RequestHandler):
             invoiceurl += "invoice-gen?ichecksum="
             invoiceurl += invoicechecksum
 
-            attach = urlfetch.fetch("http://google.com")          
+            import urllib2
+            response = urllib2.urlopen('http://hitchless.com/')
+#             self.response.out.write(response.read())
+        
             
-            asset = conversion.Asset("text/html", attach.content, "invoice.html")
+            asset = conversion.Asset("text/html", response.read(), "invoice.html")
             conversion_obj = conversion.Conversion(asset, "application/pdf")
             
             rpc = conversion.create_rpc()
@@ -606,22 +609,24 @@ class InvoiceHandler(webapp.RequestHandler):
               # Except that we return multiple assets for multiple pages image.
               for asset in result.assets:
                 invoiceattachment = asset.data
-                
-              attachname = settings.COMPANY["name"] + "-invoice#" + str(invoice[0].inum) + ".pdf"
-              emailsubject = "Invoice #" + str(invoice[0].inum) + " for $"
-              emailsubject += invoicetotal
-              emailsender = settings.COMPANY["name"]
-              emailsender += "<" + settings.COMPANY["email"] + ">"
-              message = mail.EmailMessage(sender=emailsender, subject=emailsubject)
-              message.to = "Allan Kenneth <allankh@gmail.com>"
-              message.attachments = [(attachname,invoiceattachment)]
-              message.body = "Dear " + clientname + ",\n\n"
-              message.body += "To view your invoice, please click the link below:\n\n"
-              message.body += invoiceurl
-              message.send()
-              
+              self.response.headers['Content-Type'] = "application/pdf"
+              self.response.out.write(asset.data);
+
+#               attachname = settings.COMPANY["name"] + "-invoice#" + str(invoice[0].inum) + ".pdf"
+#               emailsubject = "Invoice #" + str(invoice[0].inum) + " for $"
+#               emailsubject += invoicetotal
+#               emailsender = settings.COMPANY["name"]
+#               emailsender += "<" + settings.COMPANY["email"] + ">"
+#               message = mail.EmailMessage(sender=emailsender, subject=emailsubject)
+#               message.to = "Allan Kenneth <allankh@gmail.com>"
+#               message.attachments = [(attachname,invoiceattachment)]
+#               message.body = "Dear " + clientname + ",\n\n"
+#               message.body += "To view your invoice, please click the link below:\n\n"
+#               message.body += invoiceurl
+#               message.send()
+#               
             else:
-              message = result.error_code + " - " + result.error_text
+                message = result.error_code + " - " + result.error_text
             
             
             
@@ -633,54 +638,56 @@ class InvoiceHandler(webapp.RequestHandler):
             update = db.get(i)
             update.status = self.request.get('status')
             update.put()
-            action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#invoices'
-            self.redirect(action)
-        else:
-            statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
-            i = db.Key(self.request.get('iid'))
-            times_query = InvoiceTime.all()
-            times_query.filter('invoice =', i)
-            times = times_query.fetch(100)
-            totalhours = 0
-            subtotal = 0
-            for hours in times:
-                totalhours = totalhours + float(hours.hours)
-                subtotal = subtotal + float(hours.total)
-			# TODO figure out how we want to serve the images from the datastore
-			# qrq = Invoices.all()
-			# qrq.filter("__key__", i)
-			# qr = qrq.fetch(1)
-			# qrlink = qr[0].qrlink
-            taxrate = settings.APP["taxrate"]
-            tax = subtotal * taxrate
-            totalinvoice = subtotal + tax
-            # format the values to two decimal places before sending to template
-            # TODO remove this because it shouldn't be necessary; they should
-            # come out the datastore formatted correctly!
-            # 
-            # times[0].invoice.totalbill
-            #
-            subtotal = "%.2f" % subtotal
-            tax = "%.2f" % tax
-            totalinvoice = "%.2f" % totalinvoice
-            logopath = settings.COMPANY['logopath']
-            template_values = {
-                'message': message,
-                'statuses': statuses,
-                'times': times,
-                'totalhours': totalhours,
-                'subtotal': subtotal,
-                'tax': tax,
-                'totalinvoice': totalinvoice,
-                'logopath': logopath,
-                'companyname': settings.COMPANY['name'],
-                'companyaddress': settings.COMPANY['street'],
-                'companycity': settings.COMPANY['city'],
-                'companyprovince': settings.COMPANY['province'],
-                'companycode': settings.COMPANY['code']
-            }
-            path = os.path.join(os.path.dirname(__file__), 'views/invoice.html')
-            self.response.out.write(template.render(path, template_values))
+            message = 'Updated as ' + self.request.get('status') + '. <a href="/invoice?iid='+self.request.get('iid')+'">dismiss</a>.'
+#             action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#invoices'
+#             self.redirect(action)
+
+
+        statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
+        i = db.Key(self.request.get('iid'))
+        times_query = InvoiceTime.all()
+        times_query.filter('invoice =', i)
+        times = times_query.fetch(100)
+        totalhours = 0
+        subtotal = 0
+        for hours in times:
+            totalhours = totalhours + float(hours.hours)
+            subtotal = subtotal + float(hours.total)
+        # TODO figure out how we want to serve the images from the datastore
+        # qrq = Invoices.all()
+        # qrq.filter("__key__", i)
+        # qr = qrq.fetch(1)
+        # qrlink = qr[0].qrlink
+        taxrate = settings.APP["taxrate"]
+        tax = subtotal * taxrate
+        totalinvoice = subtotal + tax
+        # format the values to two decimal places before sending to template
+        # TODO remove this because it shouldn't be necessary; they should
+        # come out the datastore formatted correctly!
+        # 
+        # times[0].invoice.totalbill
+        #
+        subtotal = "%.2f" % subtotal
+        tax = "%.2f" % tax
+        totalinvoice = "%.2f" % totalinvoice
+        logopath = settings.COMPANY['logopath']
+        template_values = {
+            'message': message,
+            'statuses': statuses,
+            'times': times,
+            'totalhours': totalhours,
+            'subtotal': subtotal,
+            'tax': tax,
+            'totalinvoice': totalinvoice,
+            'logopath': logopath,
+            'companyname': settings.COMPANY['name'],
+            'companyaddress': settings.COMPANY['street'],
+            'companycity': settings.COMPANY['city'],
+            'companyprovince': settings.COMPANY['province'],
+            'companycode': settings.COMPANY['code']
+        }
+        path = os.path.join(os.path.dirname(__file__), 'views/invoice.html')
+        self.response.out.write(template.render(path, template_values))
 
     def post(self):
             import time

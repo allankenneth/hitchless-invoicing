@@ -77,7 +77,7 @@
 </ul>
 <div class="tab-content">
 	{% if invoices %}
-	<div id="invoices" class="tab-pane span6">
+	<div id="invoices" class="well tab-pane span6">
 	<table class="table table-striped">
 	<tr>
 		<th>Invoice #</th>
@@ -117,26 +117,31 @@
 	<div id="projects" class="tab-pane">
 
 	{% if projectkeys %}
-	<div class="span6">
-	<form action="/invoice" method="post" id="addinvoice" class="well">
+	<div class="span8 well">
+	<form action="/invoice" method="post" id="addinvoice" class="">
 		<fieldset>
 			<legend>Projects</legend>
-			
+			<input type="hidden" name="clientkey" value="{{ clientkey }}">
 			<div>
-				<input id="newinvoice" class="btn" type="submit" value="New Invoice">
-				<input type="hidden" name="clientkey" value="{{ clientkey }}">
+				
 				{% for project in projectkeys %}
-				<div class="project">
-	            <a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}">x</a>
-				<input class="invoiceproject" 
+				<div class="fluid-row project">
+
+	            <div class="span1"><input class="invoiceproject" 
 						type="checkbox" 
 						name="projects" 
 						value="{{ project.key }}" {% ifequal project.status 'empty' %} disabled {% endifequal %}>
-				<a class="sheet" href="/timesheet?pid={{ project.key }}">{{ project.pname }}</a>
-				<div class="sheetplaceholder"></div>
+
+				</div>
+				<div class="span5">
+					<a class="sheet pname" href="/timesheet?pid={{ project.key }}">{{ project.pname }}</a>
+					<div class="sheetplaceholder"></div>
+				</div>
+				<div class="span1"><a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}"><span class="icon-remove-circle"></span></a></div>
 				</div>
 			{% endfor %}
-			</div>		
+			</div>
+			<input id="newinvoice" class="btn btn-success pull-right" type="submit" value="New Invoice">		
 		</fieldset>
 	</form>
 	{% endif %}

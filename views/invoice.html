@@ -21,13 +21,13 @@
       </a>
       <div class="nav-collapse">
 	        {% if times.0.invoice.checksum  %}
-	           <a class="btn btn-success send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	           <a class="btn btn-success pull-left send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
 	            </a>
 	        {% endif %}
 
 	            {% if not times.0.invoice.checksum  %}
-	            <a class="btn btn-primary" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	            <a class="btn btn-primary pull-left" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Finalize
 	            </a>
 	            {% endif %}
@@ -35,17 +35,18 @@
 	                Delete
 	            </a>
 
-	     	<form method="get" action="/invoice" class="navbar-form pull-left">
+	     	<form method="get" action="/invoice" class="navbar-form">
 	        <div>
 	            <input type="hidden" name="action" value="statusupdate">
-				<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
-				<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
-				<!-- {{ invoice.status }} -->
 				<select class="statuschange" name="status">
 				{% for status in statuses %}
 					<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
 				{% endfor %}
 				</select>
+				<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
+				<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
+				<!-- {{ invoice.status }} -->
+
 				<button class="btn btn-mini">change</button>
 			</div>
 			</form>

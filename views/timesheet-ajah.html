@@ -32,7 +32,9 @@ $(document).ready(function(){
 		<td> ${{ entry.rate }}/{{ entry.rateunit }}</td>
 		<td>${{ entry.total }}</td>
 		<td class="timeitem">
-			<a class="deleteitem" href="/timesheet?action=delete&tid={{ entry.key }}&pid={{ time.0.project.key }}&cid={{ time.0.project.client.key }}">x</a> 
+			<a class="deleteitem" href="/timesheet?action=delete&tid={{ entry.key }}&pid={{ time.0.project.key }}&cid={{ time.0.project.client.key }}">
+				<span class="icon-remove-circle"></span>
+			</a> 
 		</td>
 	</tr>
 	<tr>
