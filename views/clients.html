@@ -29,7 +29,7 @@
 	        	<ul class="dropdown-menu">
 				{% for client in clients %}
 					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/dashboard?clientkey={{ client.key }}">{{ client.business }} </a>
+						<a href="/dashboard?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
 					</li>
 				{% endfor %}
 				</ul>

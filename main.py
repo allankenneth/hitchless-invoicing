@@ -126,6 +126,7 @@ class MainPage(webapp.RequestHandler):
                 'clients': clientlist,
                 'username': user.nickname(),
                 'useremail': user.email(),
+                'starttab': settings.APP['starttab'],
                 'url': url,
                 'url_linktext': url_linktext
             }
@@ -154,7 +155,8 @@ class ClientHandler(webapp.RequestHandler):
         client.email = self.request.get('email')
         client.notes = self.request.get('notes')
         client.put()
-        action = '/'
+        
+        action = '/dashboard?clientkey=' + str(client.key())
         self.redirect(action)
 
 
@@ -192,6 +194,7 @@ class DashboardHandler(webapp.RequestHandler):
                 'statuses': statuses,
                 'title': settings.APP['title'],
                 'author': settings.APP['author'],
+                'starttab': settings.APP['starttab'],
                 'allclients': all_clients,
                 'client': client,
                 'businessname': client[0].business,
@@ -222,7 +225,8 @@ class ProjectHandler(webapp.RequestHandler):
         if(self.request.get('action') == "delete"):
             p = db.Key(self.request.get('pid'))
             db.delete(p)
-            #self.request.get('cid')
+            action = '/dashboard?clientkey=' + self.request.get('cid') + '#projects'
+            self.redirect(action)
             self.response.out.write("Project deleted.")
         else:
             self.response.out.write("No action for this yet.")

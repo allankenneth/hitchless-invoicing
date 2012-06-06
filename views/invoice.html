@@ -16,23 +16,24 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="/dashboard?clientkey={{ times.0.invoice.client.key }}">{{ times.0.invoice.client.business }}</a>
+      <a class="brand" href="/dashboard?clientkey={{ times.0.invoice.client.key }}#invoices">
+      	{{ times.0.invoice.client.business }}
+      </a>
       <div class="nav-collapse">
-        <ul class="nav">
 	        {% if times.0.invoice.checksum  %}
-	           <li> <a class="send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	           <a class="btn btn-success send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
-	            </a></li>
-	            {% endif %}
+	            </a>
+	        {% endif %}
+
 	            {% if not times.0.invoice.checksum  %}
-	            <li><a class="send" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	            <a class="btn btn-primary" href="/invoice?action=finalize&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Finalize
-	            </a></li>
+	            </a>
 	            {% endif %}
-	            <li><a class="deleteitem" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	            <a class="btn btn-danger deleteitem pull-right" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Delete
-	            </a></li>
-        </ul>
+	            </a>
 
 	     	<form method="get" action="/invoice" class="navbar-form pull-left">
 	        <div>
@@ -62,7 +63,7 @@
 <h1>Invoice #{{ times.0.invoice.inum }}</h1>
 <div class="row-fluid">
 <div class="span2">
-	<h2>{{ times.0.invoice.date }}</h2>
+	<h3>{{ times.0.invoice.date }}</h3>
 	<img src="/qr?hashish={{ times.0.invoice.checksum}}" width="140">
 
 </div>

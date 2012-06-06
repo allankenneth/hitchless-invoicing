@@ -32,7 +32,7 @@
 	        	<ul class="dropdown-menu">
 				{% for client in allclients %}
 					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/dashboard?clientkey={{ client.key }}">{{ client.business }} </a>
+						<a href="/dashboard?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
 					</li>
 				{% endfor %}
 					<li><a href="/">All</a></li>
@@ -66,9 +66,9 @@
 
 
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills" id="tab">
 {% if invoices %}
-	<li class="active"><a href="#invoices" data-toggle="tab">invoices</a></li>
+	<li class=""><a href="#invoices" data-toggle="tab">invoices</a></li>
 {% endif %}
 	<li><a href="#projects" data-toggle="tab">projects</a></li>
 {% if projectkeys %}
@@ -77,7 +77,7 @@
 </ul>
 <div class="tab-content">
 	{% if invoices %}
-	<div id="invoices" class="tab-pane active">
+	<div id="invoices" class="tab-pane">
 	<table class="table table-striped">
 	<tr>
 		<th>Invoice #</th>
@@ -115,17 +115,9 @@
 	{% endif %}
 	
 	<div id="projects" class="tab-pane">
-	
-	<form action="/project" method="post" id="addproject" class="well">
-		<fieldset>
-			<legend>Add a project</legend>
-			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<input type="text" id="pname" name="pname" size="25" placeholder="Project name">
-	<!--		<label>Budget <input type="number" id="budget" name="budget" size="5" placeholder="hrs"></label> -->
-			<input type="submit" class="btn btn-primary" value="Add Project">
-		</fieldset>
-	</form>
+
 	{% if projectkeys %}
+	<div class="span6">
 	<form action="/invoice" method="post" id="addinvoice" class="well">
 		<fieldset>
 			<legend>Projects</legend>
@@ -148,6 +140,18 @@
 		</fieldset>
 	</form>
 	{% endif %}
+	</div>
+	<div class="span4">
+	<form action="/project" method="post" id="addproject" class="well">
+		<fieldset>
+			<legend>Add a project</legend>
+			<input type="hidden" name="clientkey" value="{{ clientkey }}">
+			<input type="text" id="pname" name="pname" size="25" placeholder="Project name">
+	<!--		<label>Budget <input type="number" id="budget" name="budget" size="5" placeholder="hrs"></label> -->
+			<input type="submit" class="btn btn-primary" value="Add Project">
+		</fieldset>
+	</form>
+	</div>
 	</div> <!-- /#projects -->
 {% if projectkeys %}
 
