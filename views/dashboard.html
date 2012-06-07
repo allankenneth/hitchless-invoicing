@@ -71,7 +71,7 @@
 	<li class=""><a href="#invoices" data-toggle="tab">invoices</a></li>
 {% endif %}
 	<li><a href="#projects" data-toggle="tab">projects</a></li>
-{% if projectkeys %}
+{% if times %}
 	<li><a href="#timeform" data-toggle="tab">add time</a></li>
 {% endif %}
 </ul>
@@ -116,61 +116,55 @@
 	
 	<div id="projects" class="tab-pane">
 
-	{% if projectkeys %}
-	<div class="span8 well">
+	{% if times %}
+	<div class="span7 well">
 	<form action="/invoice" method="post" id="addinvoice" class="">
 		<fieldset>
 			<legend>Projects</legend>
-			
-			
-
-			
 			
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
 			<table class="table table-striped">
 
 				{% for time in times %}
 				{% ifchanged time.project.pname %} 
-					<tr>
+				<tr>
 					<td colspan="8">
 						<h3>
 						<input class="invoiceproject" 
 								type="checkbox" 
 								name="projects" 
 								value="{{ time.project.key }}" {% ifequal time.project.status 'empty' %} disabled {% endifequal %}>
-						{{ time.project.pname }}
+						{{ time.project.pname }} 
 						</h3> 
 					</td>
-					</tr>
-					<tr>
-						<th>Status</th>
-						<th>Invoice #</th>
-						<th>Date</th>
-						<th>Note</th>
-						<th>Hours</th>
-						<th>Rate</th>
-						<th>Total</th>
-						<th></th>
-					</tr>
+				</tr>
+				<tr>
+					<th>Status</th>
+					<th>Invoice #</th>
+					<th>Date</th>
+					<th>Note</th>
+					<th>Hours</th>
+					<th>Rate</th>
+					<th>Total</th>
+					<th></th>
+				</tr>
 				{% endifchanged %}
 
 				<tr>
-					<td>{{ time.status }}</td>
+					<td><span class="label">{{ time.status }}</label></td>
 					<td>
 					{% if time.invoice.inum %}
-					<a href="/invoice?iid={{ time.invoice.key }}">
-						Invoice #{{ time.invoice.inum }}
-					</a>
+					<a href="/invoice?iid={{ time.invoice.key }}" class="invdetail btn btn-mini" rel="popover" data-content="${{ time.invoice.totalbill }} <br> {{ time.invoice.date }}<br>{{ time.invoice.status }}" data-original-title="Invoice #{{ time.invoice.inum }}">Invoice #{{ time.invoice.inum }}</a>
 					{% endif %} 
 					</td>
 					<td>{{ time.date}}</td> 
 					<td>{{ time.note }}</td>
 					<td>{{ time.hours }}</td>
-					<td>{{ time.rate }}/{{ time.rateunit }}</td>
+					<td>${{ time.rate }}/{{ time.rateunit }}</td>
 					<td>${{ time.total }}</td>
 					<td>
 					{% ifnotequal time.status 'invoiced' %}
-						<a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}">
+						<a href="/project?action=delete&pid={{ time.project.key }}&cid={{ time.client.key }}">
 							<span class="icon-remove-circle"></span>
 						</a>
 					{% endifnotequal %}
@@ -190,14 +184,14 @@
 		<fieldset>
 			<legend>Add a project</legend>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<input type="text" id="pname" name="pname" size="25" placeholder="Project name">
+			<input type="text" id="pname" name="pname" size="" placeholder="Project name">
 	<!--		<label>Budget <input type="number" id="budget" name="budget" size="5" placeholder="hrs"></label> -->
 			<input type="submit" class="btn btn-primary" value="Add Project">
 		</fieldset>
 	</form>
 	</div>
 	</div> <!-- /#projects -->
-{% if projectkeys %}
+{% if times %}
 
 {% include "timeform.html" %}
 
@@ -212,8 +206,8 @@
 <script src="/assets/js/bootstrap-dropdown.js"></script>
 <!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
 <script src="/assets/js/bootstrap-tab.js"></script>
-<!-- <script src="/assets/js/bootstrap-tooltip.js"></script> -->
-<!-- <script src="/assets/js/bootstrap-popover.js"></script> -->
+<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="/assets/js/bootstrap-popover.js"></script>
 <script src="/assets/js/bootstrap-button.js"></script>
 <script src="/assets/js/bootstrap-collapse.js"></script>
 <!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->

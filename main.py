@@ -159,7 +159,11 @@ class ClientHandler(webapp.RequestHandler):
         self.redirect(action)
 
 
+
 class DashboardHandler(webapp.RequestHandler):
+
+
+
     def get(self):
         user = users.get_current_user()
         if user:
@@ -175,16 +179,18 @@ class DashboardHandler(webapp.RequestHandler):
             clients_query.filter('__key__ = ', k)
             client = clients_query.fetch(1)
             
-            
-            projects_query = Projects.all()
-            projects_query.filter('client =', k)
-            projects = projects_query.fetch(100)
-            
             time_query = Time.all()
             time_query.filter('client =', k)
             time_query.order('project')
             times = time_query.fetch(100)
-            
+            projectlist = []
+            for project in times:
+                pk = str(project.project.key())
+                projectlist.append([project.project.pname,pk])
+            projects = []
+            for e in projectlist:
+                if e not in projects:
+                    projects.append(e)
             
             invoices_query = Invoices.all()
             invoices_query.filter('client =', k)
@@ -206,6 +212,7 @@ class DashboardHandler(webapp.RequestHandler):
                 'times': times,
                 'allclients': all_clients,
                 'client': client,
+                'foo': projects,
                 'businessname': client[0].business,
                 'services': services,
                 'projectkeys': projects,
