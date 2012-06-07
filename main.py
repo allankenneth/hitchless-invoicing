@@ -183,14 +183,10 @@ class DashboardHandler(webapp.RequestHandler):
             time_query.filter('client =', k)
             time_query.order('project')
             times = time_query.fetch(100)
-            projectlist = []
-            for project in times:
-                pk = str(project.project.key())
-                projectlist.append([project.project.pname,pk])
-            projects = []
-            for e in projectlist:
-                if e not in projects:
-                    projects.append(e)
+
+            projects_query = Projects.all()
+            projects_query.filter('client =', k)
+            projects = projects_query.fetch(100)
             
             invoices_query = Invoices.all()
             invoices_query.filter('client =', k)

@@ -71,7 +71,7 @@
 	<li class=""><a href="#invoices" data-toggle="tab">invoices</a></li>
 {% endif %}
 	<li><a href="#projects" data-toggle="tab">projects</a></li>
-{% if times %}
+{% if projectkeys %}
 	<li><a href="#timeform" data-toggle="tab">add time</a></li>
 {% endif %}
 </ul>
@@ -191,7 +191,7 @@
 	</form>
 	</div>
 	</div> <!-- /#projects -->
-{% if times %}
+{% if projectkeys %}
 
 {% include "timeform.html" %}
 
