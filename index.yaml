@@ -28,6 +28,11 @@ indexes:
 
 - kind: Time
   properties:
+  - name: client
+  - name: project
+
+- kind: Time
+  properties:
   - name: project
   - name: date
 

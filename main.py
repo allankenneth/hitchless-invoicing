@@ -90,6 +90,7 @@ class Invoices(db.Model):
 
 class Time(db.Model):
     #TODO Um, hello? date is a string?
+    client = db.ReferenceProperty(Clients)
     invoice = db.ReferenceProperty(Invoices)
     project = db.ReferenceProperty(Projects)
     date = db.StringProperty()
@@ -173,9 +174,18 @@ class DashboardHandler(webapp.RequestHandler):
             clients_query = Clients.all()
             clients_query.filter('__key__ = ', k)
             client = clients_query.fetch(1)
+            
+            
             projects_query = Projects.all()
             projects_query.filter('client =', k)
             projects = projects_query.fetch(100)
+            
+            time_query = Time.all()
+            time_query.filter('client =', k)
+            time_query.order('project')
+            times = time_query.fetch(100)
+            
+            
             invoices_query = Invoices.all()
             invoices_query.filter('client =', k)
             # invoices_query.filter('status != ', 'deleted')
@@ -193,6 +203,7 @@ class DashboardHandler(webapp.RequestHandler):
                 'title': settings.APP['title'],
                 'author': settings.APP['author'],
                 'starttab': settings.APP['starttab'],
+                'times': times,
                 'allclients': all_clients,
                 'client': client,
                 'businessname': client[0].business,
@@ -429,6 +440,7 @@ class TimesheetHandler(webapp.RequestHandler):
         linetotal = int(rateservice[1]) * float(self.request.get('hours'))
         linetotal = "%.2f" % linetotal
         entry = Time()
+        entry.client = db.Key(self.request.get('clientkey'))
         entry.project = projectid
         entry.date = event_end
         entry.hours = float(self.request.get('hours'))
@@ -637,8 +649,11 @@ class InvoiceHandler(webapp.RequestHandler):
             update.status = self.request.get('status')
             update.put()
             message = 'Updated as ' + self.request.get('status') + '. <a href="/invoice?iid='+self.request.get('iid')+'"><span class="icon-remove-sign"><span></a>'
-#             action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#invoices'
-#             self.redirect(action)
+
+
+        # After all of the different actions to be taken,
+        # we finally just print out the invoice with the appropriate message
+        # at the top.
 
 
         statuses = ["draft", "invoiced", "paid", "sent", "deleted"]

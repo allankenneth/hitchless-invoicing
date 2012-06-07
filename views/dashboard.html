@@ -121,26 +121,65 @@
 	<form action="/invoice" method="post" id="addinvoice" class="">
 		<fieldset>
 			<legend>Projects</legend>
+			
+			
+
+			
+			
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<div>
-				
-				{% for project in projectkeys %}
-				<div class="fluid-row project">
+			<table class="table table-striped">
 
-	            <div class="span1"><input class="invoiceproject" 
-						type="checkbox" 
-						name="projects" 
-						value="{{ project.key }}" {% ifequal project.status 'empty' %} disabled {% endifequal %}>
+				{% for time in times %}
+				{% ifchanged time.project.pname %} 
+					<tr>
+					<td colspan="8">
+						<h3>
+						<input class="invoiceproject" 
+								type="checkbox" 
+								name="projects" 
+								value="{{ time.project.key }}" {% ifequal time.project.status 'empty' %} disabled {% endifequal %}>
+						{{ time.project.pname }}
+						</h3> 
+					</td>
+					</tr>
+					<tr>
+						<th>Status</th>
+						<th>Invoice #</th>
+						<th>Date</th>
+						<th>Note</th>
+						<th>Hours</th>
+						<th>Rate</th>
+						<th>Total</th>
+						<th></th>
+					</tr>
+				{% endifchanged %}
 
-				</div>
-				<div class="span5">
-					<a class="sheet pname" href="/timesheet?pid={{ project.key }}">{{ project.pname }}</a>
-					<div class="sheetplaceholder"></div>
-				</div>
-				<div class="span1"><a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}"><span class="icon-remove-circle"></span></a></div>
-				</div>
-			{% endfor %}
-			</div>
+				<tr>
+					<td>{{ time.status }}</td>
+					<td>
+					{% if time.invoice.inum %}
+					<a href="/invoice?iid={{ time.invoice.key }}">
+						Invoice #{{ time.invoice.inum }}
+					</a>
+					{% endif %} 
+					</td>
+					<td>{{ time.date}}</td> 
+					<td>{{ time.note }}</td>
+					<td>{{ time.hours }}</td>
+					<td>{{ time.rate }}/{{ time.rateunit }}</td>
+					<td>${{ time.total }}</td>
+					<td>
+					{% ifnotequal time.status 'invoiced' %}
+						<a href="/project?action=delete&pid={{ project.key }}&cid={{ projectkeys.0.client.key }}">
+							<span class="icon-remove-circle"></span>
+						</a>
+					{% endifnotequal %}
+					</td>
+				</tr>
+
+				{% endfor %}
+
+			</table>
 			<input id="newinvoice" class="btn btn-success pull-right" type="submit" value="New Invoice">		
 		</fieldset>
 	</form>
