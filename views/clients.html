@@ -20,11 +20,12 @@
       <a class="brand">hitchless Invoicing</a>
       <div class="nav-collapse">
         <a class="btn btn-mini pull-right" href="{{ url }}">{{ url_linktext }}</a>
+        <a data-toggle="modal" class="btn btn-success btn-nav pull-left" href="#addclient">Add Client</a>
         <ul class="nav">
 
         	<li class="dropdown">
 	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	        		Clients 
+	        		Client List
 	        		<b class="caret"></b>
 	        	</a>
 	        	<ul class="dropdown-menu">
@@ -36,41 +37,64 @@
 				</ul>
 			</li>
         </ul>
+        
       </div><!--/.nav-collapse -->
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
+	<div class="hero-unit">
+		<h1>Welcome.</h1>
+		<p>When you're logging time, it's all about knowing <em>when</em> you finish a period of work. You log the end time, then mark how long you spent.</p>
+		<div><a href="#" class="btn btn-primary btn-large">More Tips</a></div>
+	</div>
+<div class="fluid-row">
+<div class="span 7">
+	<h2>Clients</h2>
+	<table class="table table-striped" id="clientlist">
+	{% if clients %}
+	{% for client in clients %}
+		<tr>
+			<td><a href="dashboard?clientkey={{ client.key }}">{{ client.business }}</a></td>
+			<td>{{ client.name }}</td>
+			<td><a href="maitlo:{{ client.email }}">{{ client.email }}</a></td>
+		</tr>
+	{% endfor %}
+	{% else %}
+		<tr>
+			<td><p>No contacts.</p></td>
+		</tr>
+	{% endif %}
+	</ul>
+</div> <!-- /well span7 -->
+</div> <!-- /fluid-row -->
 
-	<section class="row-fluid">
-<!--
-		<ul id="clientlist">
-		{% if clients %}
-		{% for client in clients %}
-			<li><a href="dashboard?clientkey={{ client.key }}">{{ client.business }}</a></li>
-		{% endfor %}
-		{% else %}
-			<p>No contacts.</p>
-		{% endif %}
-		</ul>
--->
-		
-		<form method="post" action="/client" class="addclient">
+<div class="modal hide fade" id="addclient">
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>Add a client.</h3>
+  </div>
+  <div class="modal-body">
+		<form method="post" action="/client" class="">
 		    <fieldset>
-		        <legend>Add a Client</legend>
+		        <div>
 		        <div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
 		        <div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
 		        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
 		        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
 		        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
 		        <button class="btn btn-primary">Add Client</button>
+		        </div>
 		    </fieldset>
 		</form>
-	
-	</section> <!-- /#main -->
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
 
-</section> <!-- /.row-fluid -->
+
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/bootstrap-transition.js"></script>
 <!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
@@ -78,8 +102,8 @@
 <script src="/assets/js/bootstrap-dropdown.js"></script>
 <!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
 <script src="/assets/js/bootstrap-tab.js"></script>
-<!-- <script src="/assets/js/bootstrap-tooltip.js"></script> -->
-<!-- <script src="/assets/js/bootstrap-popover.js"></script> -->
+<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="/assets/js/bootstrap-popover.js"></script>
 <script src="/assets/js/bootstrap-button.js"></script>
 <script src="/assets/js/bootstrap-collapse.js"></script>
 <!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
