@@ -21,6 +21,10 @@
       <span class="brand">{{ businessname }}</span>
       <div class="nav-collapse">
         <ul class="nav">
+        	<li><a href="/dashboard?clientkey={{ client.0.key }}">Dashboard</a></li>
+        	<li><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
+        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
+
         	<li>
         		<a data-toggle="modal" href="#clientinfo">Contact</a>
         	</li>
@@ -64,64 +68,15 @@
 </div>
 
 
-
-
-<ul class="nav nav-pills" id="tab">
-{% if invoices %}
-	<li class=""><a href="#invoices" data-toggle="tab">invoices</a></li>
-{% endif %}
-	<li><a href="#projects" data-toggle="tab">projects</a></li>
-{% if projectkeys %}
-	<li><a href="#timeform" data-toggle="tab">add time</a></li>
-{% endif %}
-</ul>
-<div class="tab-content">
-	{% if invoices %}
-	<div id="invoices" class="well tab-pane span6">
-	<table class="table table-striped">
-	<tr>
-		<th>Invoice #</th>
-		<th>Total</th>
-		<th>Date</th>
-		<th>Status</th>
-		<th></th>
-	</tr>
-		{% for invoice in invoices %}
-		<tr>
-		<td id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
-			    <span class="badge">#{{ invoice.inum }}</span>
-		</td>
-		<td>
-			    <strong>${{ invoice.totalbill }}</strong>
-		</td>
-		<td>
-			    {{ invoice.date }}  <!--  invoice.date|date:"j-M" -->
-		</td>
-		<td>
-				<span class="label 
-			    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
-			    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
-			    {% ifequal invoice.status 'sent' %} label-warning {% endifequal %}
-			    ">{{ invoice.status }}</span>
-		</td>
-		<td>
-			<a href="/invoice?iid={{ invoice.key }}" class="total">View</a>
-		    
-		</td>
-		</tr>
-		{% endfor %}
-		</table>
-	</div> <!-- /#invoices -->
-	{% endif %}
 	
-	<div id="projects" class="tab-pane">
+	<div id="projects">
 
 	{% if times %}
 	<div class="span7 well">
+	<h2>Projects</h2>
 	<form action="/invoice" method="post" id="addinvoice" class="">
 		<fieldset>
-			<legend>Projects</legend>
-			
+			<div>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
 			<table class="table table-striped">
 
@@ -157,7 +112,7 @@
 					<a href="/invoice?iid={{ time.invoice.key }}" class="invdetail btn btn-mini" rel="popover" data-content="${{ time.invoice.totalbill }} <br> {{ time.invoice.date }}<br>{{ time.invoice.status }}" data-original-title="Invoice #{{ time.invoice.inum }}">Invoice #{{ time.invoice.inum }}</a>
 					{% endif %} 
 					</td>
-					<td>{{ time.date}}</td> 
+					<td>{{ time.date|date:"F j" }}</td> 
 					<td>{{ time.note }}</td>
 					<td>{{ time.hours }}</td>
 					<td>${{ time.rate }}/{{ time.rateunit }}</td>
@@ -175,6 +130,7 @@
 
 			</table>
 			<input id="newinvoice" class="btn btn-success pull-right" type="submit" value="New Invoice">		
+			</div>
 		</fieldset>
 	</form>
 	{% endif %}
@@ -196,7 +152,7 @@
 {% include "timeform.html" %}
 
 {% endif %}
-</div> <!-- /.tab-content -->
+
 </div> <!-- /.container -->
 
 <script src="/assets/js/jquery.js"></script>

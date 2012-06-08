@@ -21,22 +21,22 @@
       <div class="nav-collapse">
         <a class="btn btn-mini pull-right" href="{{ url }}">{{ url_linktext }}</a>
         <a data-toggle="modal" class="btn btn-success btn-nav pull-left" href="#addclient">Add Client</a>
-        <ul class="nav">
 
-        	<li class="dropdown">
-	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		<div class="btn-group pull-left">
+
+				<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
 	        		Client List
 	        		<b class="caret"></b>
 	        	</a>
 	        	<ul class="dropdown-menu">
 				{% for client in clients %}
 					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/dashboard?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
+						<a href="/projects?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
 					</li>
 				{% endfor %}
 				</ul>
-			</li>
-        </ul>
+		</div>
+
         
       </div><!--/.nav-collapse -->
     </div>
@@ -46,17 +46,22 @@
 <div class="container-fluid">
 	<div class="hero-unit">
 		<h1>Welcome.</h1>
-		<p>When you're logging time, it's all about knowing <em>when</em> you finish a period of work. You log the end time, then mark how long you spent.</p>
+		<p>When you're logging time, it's all about knowing <em>when you finish</em> a period of work. You log the end time, then mark how long you spent.</p>
 		<div><a href="#" class="btn btn-primary btn-large">More Tips</a></div>
 	</div>
 <div class="fluid-row">
 <div class="span 7">
 	<h2>Clients</h2>
 	<table class="table table-striped" id="clientlist">
+	<tr>
+		<th>Business</th>
+		<th>Name</th>
+		<th>Email</th>
+	</tr>
 	{% if clients %}
 	{% for client in clients %}
 		<tr>
-			<td><a href="dashboard?clientkey={{ client.key }}">{{ client.business }}</a></td>
+			<td><a href="/projects?clientkey={{ client.key }}">{{ client.business }}</a></td>
 			<td>{{ client.name }}</td>
 			<td><a href="maitlo:{{ client.email }}">{{ client.email }}</a></td>
 		</tr>

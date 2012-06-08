@@ -93,7 +93,7 @@ class Time(db.Model):
     client = db.ReferenceProperty(Clients)
     invoice = db.ReferenceProperty(Invoices)
     project = db.ReferenceProperty(Projects)
-    date = db.StringProperty()
+    date = db.DateTimeProperty()
     service = db.StringProperty()
     rate = db.IntegerProperty()
     rateunit = db.StringProperty()
@@ -155,12 +155,12 @@ class ClientHandler(webapp.RequestHandler):
         client.notes = self.request.get('notes')
         client.put()
         
-        action = '/dashboard?clientkey=' + str(client.key())
+        action = '/projects?clientkey=' + str(client.key())
         self.redirect(action)
 
 
 
-class DashboardHandler(webapp.RequestHandler):
+class ProjectsHandler(webapp.RequestHandler):
 
 
 
@@ -188,11 +188,7 @@ class DashboardHandler(webapp.RequestHandler):
             projects_query.filter('client =', k)
             projects = projects_query.fetch(100)
             
-            invoices_query = Invoices.all()
-            invoices_query.filter('client =', k)
-            # invoices_query.filter('status != ', 'deleted')
-            invoices_query.order('-inum')
-            invoices = invoices_query.fetch(100)
+
             statuses = ["draft", "invoiced", "paid", "sent", "deleted"]
             if users.get_current_user():
                 url = users.create_logout_url(self.request.uri)
@@ -212,14 +208,14 @@ class DashboardHandler(webapp.RequestHandler):
                 'businessname': client[0].business,
                 'services': services,
                 'projectkeys': projects,
-                'invoices': invoices,
+
                 'clientname': self.request.get('clientname'),
                 'clientkey': self.request.get('clientkey'),
                 'url': url,
                 'url_linktext': url_linktext,
                 }
             path = os.path.join(os.path.dirname(__file__), 
-                                'views/dashboard.html')
+                                'views/projects.html')
             self.response.out.write(template.render(path, template_values))
         else:
             url = users.create_login_url(self.request.uri)
@@ -237,7 +233,7 @@ class ProjectHandler(webapp.RequestHandler):
         if(self.request.get('action') == "delete"):
             p = db.Key(self.request.get('pid'))
             db.delete(p)
-            action = '/dashboard?clientkey=' + self.request.get('cid') + '#projects'
+            action = '/projects?clientkey=' + self.request.get('cid') + '#projects'
             self.redirect(action)
             self.response.out.write("Project deleted.")
         else:
@@ -276,7 +272,7 @@ class ProjectHandler(webapp.RequestHandler):
         projects.status = 'empty'
         projects.summary = 0
         projects.put()
-        action = '/dashboard?clientkey=' + self.request.get('clientkey') + '#projects'
+        action = '/projects?clientkey=' + self.request.get('clientkey') + '#projects'
         self.redirect(action)
 
 
@@ -285,7 +281,7 @@ class ServiceHandler(webapp.RequestHandler):
         if(self.request.get('action') == "delete"):
             service = db.Key(self.request.get('sid'))
             db.delete(service)
-            action = '/dashboard?clientkey=' + self.request.get('clientkey')
+            action = '/projects?clientkey=' + self.request.get('clientkey')
             self.redirect(action)
     def post(self):
         service = str(self.request.get('service'))
@@ -297,7 +293,7 @@ class ServiceHandler(webapp.RequestHandler):
         client.rateunit = rateunit
         client.active = True
         client.put()
-        action = '/dashboard?clientkey=' + self.request.get('clientkey')
+        action = '/projects?clientkey=' + self.request.get('clientkey')
         self.redirect(action)
 
 
@@ -311,20 +307,20 @@ class TimesheetHandler(webapp.RequestHandler):
             # If the project doesn't have any other outstanding time
             # to be invoiced, update its status so the UI reflects that.
             # It's expensive, but necessary.
-            projectid = db.Key(self.request.get('pid'))
-            time_query = Time.all()
-            time_query.filter('project =', projectid)
-            time_query.filter('status =', 'logged')
-            time_query.order('-date')
-            time = time_query.fetch(10)
-            if not time:
-                project_query = Projects.all()
-                project_query.filter('__key__ =', projectid)
-                projects = project_query.fetch(1)
-                projects[0].status = 'empty'
-                projects[0].put()
-            action = '/dashboard?clientkey=' + self.request.get('cid')
-            self.redirect(action)
+#             projectid = db.Key(self.request.get('pid'))
+#             time_query = Time.all()
+#             time_query.filter('project =', projectid)
+#             time_query.filter('status =', 'logged')
+#             time_query.order('-date')
+#             time = time_query.fetch(10)
+#             if not time:
+#                 project_query = Projects.all()
+#                 project_query.filter('__key__ =', projectid)
+#                 projects = project_query.fetch(1)
+#                 projects[0].status = 'empty'
+#                 projects[0].put()
+#             action = '/dashboard?clientkey=' + self.request.get('cid')
+#             self.redirect(action)
 
 
         if(self.request.get('output') == "form"):
@@ -445,7 +441,7 @@ class TimesheetHandler(webapp.RequestHandler):
         entry = Time()
         entry.client = db.Key(self.request.get('clientkey'))
         entry.project = projectid
-        entry.date = event_end
+        entry.date = the_end
         entry.hours = float(self.request.get('hours'))
         entry.service = rateservice[0]
         entry.rate = int(rateservice[1])
@@ -481,9 +477,45 @@ class TimesheetHandler(webapp.RequestHandler):
                 else:
                     raise
         #action = '/dashboard?clientkey=' + self.request.get('clientkey')
-        action = '/timesheet?pid=' + self.request.get('pid')
+        action = '/projects?clientkey=' + self.request.get('clientkey')
         self.redirect(action)
 
+
+class InvoicesHandler(webapp.RequestHandler):
+    def get(self):
+
+        k = db.Key(self.request.get('clientkey'))
+        
+        invoices_query = Invoices.all()
+        invoices_query.filter('client =', k)
+        # invoices_query.filter('status != ', 'deleted')
+        invoices_query.order('-inum')
+        invoices = invoices_query.fetch(100)
+
+        all_clients_query = Clients.all()
+        all_clients = all_clients_query.fetch(100)
+
+        services_query = Services.all()
+        # TODO: make the filter below work, and 
+        # add UI to disable services
+        #services_query.filter('active =', 'True')
+        services = services_query.fetch(100)
+
+
+        clients_query = Clients.all()
+        clients_query.filter('__key__ = ', k)
+        client = clients_query.fetch(1)
+
+        template_values = {
+            'services': services,
+            'invoices': invoices,
+            'allclients': all_clients,
+            'client':  client,
+            'businessname': client[0].business
+            }
+        path = os.path.join(os.path.dirname(__file__), 
+                            'views/invoices.html')
+        self.response.out.write(template.render(path, template_values))
 
 class InvoiceHandler(webapp.RequestHandler):
     def get(self):
@@ -517,7 +549,7 @@ class InvoiceHandler(webapp.RequestHandler):
             # itime = InvoiceTime.all()
             # itime.filter("invoice", i)
             # itime.delete()
-            action = '/dashboard?clientkey=' + self.request.get('cid')
+            action = '/invoices?clientkey=' + self.request.get('cid')
             self.redirect(action)
         if (self.request.get('action') == "finalize"):
             # When we first create an invoice, we leave a few things blank,
@@ -838,9 +870,10 @@ class GetQRLinkHandler(webapp.RequestHandler):
 application = webapp.WSGIApplication([
                                       ('/', MainPage),
                                       ('/client', ClientHandler),
-                                      ('/dashboard', DashboardHandler),
+                                      ('/projects', ProjectsHandler),
                                       ('/timesheet', TimesheetHandler),
                                       ('/invoice', InvoiceHandler),
+                                      ('/invoices', InvoicesHandler),
                                       ('/invoice-gen', InvoiceGenerateHandler),
                                       ('/project', ProjectHandler),
                                       ('/qr', GetQRLinkHandler),

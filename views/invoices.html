@@ -1,47 +1,127 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Hitchless Invoicing</title>
-	<link rel="stylesheet" href="/css/styles.css" type="text/css">
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript">   
-	jQuery(function(){             
-        $(".showinfo").click(function(){
-            $(".clientinfo").slideToggle();
-            return false;
-        });
-	});
-	</script>
+	<title>{{ client.0.business }} ~ {{ title }}</title>
+	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
-<body>
-<div id="container">
-<h1><a href="/projects?clientkey={{clientkey}}">&bull;</a> {{ client.0.business }} <a href="#" class="show showinfo">info</a></h1>
-<div class="clientinfo">
-	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
-	<div class="email"><a href="mailto:{{ client.email }}">{{ client.0.email }}</a></div>
-	<div class="notes">{{ client.0.notes }}</div>
+<body id="projectlist">
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <span class="brand">{{ businessname }}</span>
+      <div class="nav-collapse">
+        <ul class="nav">
+<!--         	<li><a href="/dashboard?clientkey={{ client.0.key }}">Dashboard</a></li> -->
+        	<li class="active"><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
+        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
+        	
+        	<li>
+        		<a data-toggle="modal" href="#clientinfo">Contact</a>
+        	</li>
+
+        </ul>
+        <div class="btn-group pull-right">
+
+			<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+	       		Client List
+	       		<b class="caret"></b>
+	       	</a>
+	       	<ul class="dropdown-menu">
+		       	<li><a href="/">All</a></li>
+			{% for client in allclients %}
+				<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
+					<a href="/projects?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
 </div>
-<table id="invoices">
+    
+
+<div class="container-fluid">
+
+
+<div class="modal hide fade" id="clientinfo">
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>{{businessname}}</h3>
+  </div>
+  <div class="modal-body">
+	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+	<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
+	<div class="notes">{{ client.0.notes }}</div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
+{% if invoices %}
+<div id="invoices" class="well tab-pane span6">
+<h2>Invoices</h2>
+<table class="table table-striped">
 <tr>
-	<th id="datecol">Date</th>
-	<th>ID</th>
+	<th>Invoice #</th>
+	<th>Total</th>
+	<th>Date</th>
 	<th>Status</th>
+	<th></th>
 </tr>
-{% for invoice in invoices %}
-<tr>
-	<td>
-		{{ invoice.date }}
+	{% for invoice in invoices %}
+	<tr>
+	<td id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
+		    <span class="badge">#{{ invoice.inum }}</span>
 	</td>
 	<td>
-		<a href="/invoice?iid={{ invoice.key }}">{{ invoice.key.id }}</a>
+		    <strong>${{ invoice.totalbill }}</strong>
 	</td>
 	<td>
-		{{ invoice.status }}
+		    {{ invoice.date }}  <!--  invoice.date|date:"j-M" -->
 	</td>
-</tr>
-{% endfor %}
-</table>
+	<td>
+			<span class="label 
+		    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
+		    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
+		    {% ifequal invoice.status 'sent' %} label-warning {% endifequal %}
+		    ">{{ invoice.status }}</span>
+	</td>
+	<td>
+		<a href="/invoice?iid={{ invoice.key }}" class="total">View</a>
+	    
+	</td>
+	</tr>
+	{% endfor %}
+	</table>
+</div> <!-- /#invoices -->
+{% endif %}
 
 </div>
+
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
+<script src="/assets/js/bootstrap-tab.js"></script>
+<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="/assets/js/bootstrap-popover.js"></script>
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
+<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>
