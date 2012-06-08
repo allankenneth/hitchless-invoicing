@@ -125,7 +125,6 @@ class MainPage(webapp.RequestHandler):
                 'clients': clientlist,
                 'username': user.nickname(),
                 'useremail': user.email(),
-                'starttab': settings.APP['starttab'],
                 'url': url,
                 'url_linktext': url_linktext
             }
@@ -200,7 +199,6 @@ class ProjectsHandler(webapp.RequestHandler):
                 'statuses': statuses,
                 'title': settings.APP['title'],
                 'author': settings.APP['author'],
-                'starttab': settings.APP['starttab'],
                 'times': times,
                 'allclients': all_clients,
                 'client': client,
@@ -208,7 +206,6 @@ class ProjectsHandler(webapp.RequestHandler):
                 'businessname': client[0].business,
                 'services': services,
                 'projectkeys': projects,
-
                 'clientname': self.request.get('clientname'),
                 'clientkey': self.request.get('clientkey'),
                 'url': url,
@@ -233,7 +230,7 @@ class ProjectHandler(webapp.RequestHandler):
         if(self.request.get('action') == "delete"):
             p = db.Key(self.request.get('pid'))
             db.delete(p)
-            action = '/projects?clientkey=' + self.request.get('cid') + '#projects'
+            action = '/projects?clientkey=' + self.request.get('cid') + ''
             self.redirect(action)
             self.response.out.write("Project deleted.")
         else:
@@ -272,7 +269,7 @@ class ProjectHandler(webapp.RequestHandler):
         projects.status = 'empty'
         projects.summary = 0
         projects.put()
-        action = '/projects?clientkey=' + self.request.get('clientkey') + '#projects'
+        action = '/projects?clientkey=' + self.request.get('clientkey') + ''
         self.redirect(action)
 
 

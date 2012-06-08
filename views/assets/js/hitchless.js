@@ -1,9 +1,11 @@
 !function ($) {
 
+/*
 	var panel = window.location.hash;
 	if (!panel) panel = '#projects';
 	var show = '#tab a[href="'+panel+'"]';
 	$(show).tab('show');
+*/
 
 	$(".invdetail").popover();
 	$('#showcinfo').modal({backdrop:'false', show:'false'})

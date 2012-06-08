@@ -10,7 +10,7 @@
 </head>
 <body id="projectlist">
 
-<div class="navbar">
+<div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -40,7 +40,7 @@
 		       	<li><a href="/">All</a></li>
 			{% for client in allclients %}
 				<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-					<a href="/projects?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
+					<a href="/projects?clientkey={{ client.key }}">{{ client.business }} </a>
 				</li>
 			{% endfor %}
 			</ul>

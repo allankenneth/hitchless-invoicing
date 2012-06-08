@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body>
-<div class="navbar">
+<div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -31,7 +31,7 @@
 	        	<ul class="dropdown-menu">
 				{% for client in clients %}
 					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/projects?clientkey={{ client.key }}#{{starttab}}">{{ client.business }} </a>
+						<a href="/projects?clientkey={{ client.key }}">{{ client.business }} </a>
 					</li>
 				{% endfor %}
 				</ul>
@@ -46,8 +46,8 @@
 <div class="container-fluid">
 	<div class="hero-unit">
 		<h1>Welcome.</h1>
-		<p>When you're logging time, it's all about knowing <em>when you finish</em> a period of work. You log the end time, then mark how long you spent.</p>
-		<div><a href="#" class="btn btn-primary btn-large">More Tips</a></div>
+		<p>You've made $22,315 with this app.</p>
+		<div><a href="#" class="btn btn-primary btn-large">Graphs coming soon.</a></div>
 	</div>
 <div class="fluid-row">
 <div class="span 7">
