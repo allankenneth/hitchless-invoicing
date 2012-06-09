@@ -8,6 +8,7 @@
 	<meta name="viewport" content="width=device-width,user-scalable=no">
 </head>
 <body id="invoice">
+
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -16,10 +17,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="/invoices?clientkey={{ times.0.invoice.client.key }}#invoices">
+      <a class="brand" href="/invoices?clientkey={{ times.0.invoice.client.key }}">
       	{{ times.0.invoice.client.business }}
       </a>
       <div class="nav-collapse">
+        <ul class="nav pull-left">
+          	<li ><a href="/invoices?clientkey={{ times.0.invoice.client.key }}">Invoices</a></li> <!-- class="active" -->
+        	<li><a href="/projects?clientkey={{ times.0.invoice.client.key }}">Projects</a></li>
+        	<li><a data-toggle="modal" href="#clientinfo">Contact</a></li>
+        </ul>
+
 	        {% if times.0.invoice.checksum  %}
 	           <a class="btn btn-success pull-left send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
@@ -31,25 +38,28 @@
 	                Finalize
 	            </a>
 	            {% endif %}
-	            <a class="btn btn-danger deleteitem pull-right" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
+	            
+	            <div class="btn-group pull-left">
+					<a class="btn btn-nav dropdown-toggle" data-toggle="dropdown" href="#">
+						Set Status
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+				{% for status in statuses %}
+					<li class="{% ifequal times.0.invoice.status status %}active{% endifequal %}">
+					<a href="/invoice?action=statusupdate&status={{ status }}&iid={{ times.0.invoice.key }}&clientkey={{ times.0.invoice.client.key }}" 
+						class="">
+							{{ status }}
+					</a>
+					</li>
+				{% endfor %}
+					</ul>
+				</div>
+
+	            <a class="btn btn-danger deleteitem pull-left" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Delete
 	            </a>
 
-	     	<form method="get" action="/invoice" class="navbar-form pull-left">
-	        <div>
-	            <input type="hidden" name="action" value="statusupdate">
-				<select class="statuschange" name="status">
-				{% for status in statuses %}
-					<option {% ifequal times.0.invoice.status status %} selected {% endifequal %}>{{ status }}</option>
-				{% endfor %}
-				</select>
-				<input type="hidden" name="iid" value="{{ times.0.invoice.key }}">
-				<input type="hidden" name="clientkey" value="{{ times.0.invoice.client.key }}">
-				<!-- {{ invoice.status }} -->
-
-				<button class="btn btn-mini">change</button>
-			</div>
-			</form>
 
       </div><!--/.nav-collapse -->
     </div>
@@ -117,6 +127,23 @@ Notes: {{ times.0.invoice.notes }}
 </div>
 </div> <!-- /#main -->
 </div>
+
+<div class="modal hide fade" id="clientinfo">
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>{{ times.0.invoice.client.business }}</h3>
+  </div>
+  <div class="modal-body">
+	<div class="name">{{ times.0.invoice.client.name }}, <span class="title">{{ times.0.invoice.client.title }}</span></div>
+	<div class="email"><a href="mailto:{{ times.0.invoice.client.email }}"><i class="icon-envelope"></i>{{ times.0.invoice.client.email }}</a></div>
+	<div class="notes">{{ times.0.invoice.client.notes }}</div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
+
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/bootstrap-transition.js"></script>
 <!-- <script src="/assets/js/bootstrap-alert.js"></script> -->

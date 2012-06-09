@@ -1,4 +1,4 @@
-	<div id="timeform" class="span4">
+	<div id="timeform" class="span3">
 		<!-- <header><h1>Tracker</h1></header> -->
 		<div id="timetrack">
 		<div class="modal hide fade" id="addservice">
@@ -39,14 +39,14 @@
 				<input type="datetime-local" size="30" id="datetime" name="date" placeholder="YYYY-MM-DDTHH:MM:SS">
 				<br>
 				<textarea id="note" name="note" rows="4" cols="30" placeholder="Note"></textarea><br>
-				<select name="service">
+				<select class="pulleft" id="servicemenuss" name="service">
 					{% for service in services %}
 					<option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
 					{% endfor %}
 				</select>
-				<a data-toggle="modal" href="#addservice"><span class="icon-plus-sign"></span></a><br>
-				<input type="number" class="input-mini" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
-				<input type="submit" class="btn btn-success" value="Add Time">
+				<a class="btn btn-mini pull-right" data-toggle="modal" href="#addservice"><span class="icon-plus-sign"></span></a><br>
+				<input type="number" class="input-mini pull-left" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
+				<input type="submit" class="btn btn-success btn-large pull-left" value="Add Time">
 			</fieldset>
 		</form>
 		</div>  <!-- /#timetrack -->

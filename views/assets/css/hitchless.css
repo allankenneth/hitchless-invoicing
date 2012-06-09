@@ -47,3 +47,20 @@ legend {
 .projecthead {
 	background: #FFF;
 }
+#hours {
+	font-size: 16px;
+	margin: 22px 5px 0 0;
+}
+.projecttitle {
+	background: #FFF;
+	border-radius: 3px;
+	margin: 10px 0 0 0;
+	padding: 5px;
+}
+#servicemenuss {
+	width: 180px;
+}
+.timelog {
+	margin: 8px auto 40px auto;
+	width: 98%;
+}

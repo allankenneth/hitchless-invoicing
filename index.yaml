@@ -33,6 +33,12 @@ indexes:
 
 - kind: Time
   properties:
+  - name: client
+  - name: project
+    direction: desc
+
+- kind: Time
+  properties:
   - name: project
   - name: date
 

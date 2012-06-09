@@ -72,10 +72,10 @@
 
 	
 	<div id="projects">
-	<div class="span7 well">
+	<div class="span8 well">
 	<h2>
 		Projects 
-		<a data-toggle="modal" href="#addproject"><span class="icon-plus-sign"></span></a>
+		<a class="btn btn-mini" data-toggle="modal" href="#addproject"><span class="icon-plus-sign"></span></a>
 	</h2>
 	{% if times %}
 
@@ -83,26 +83,27 @@
 		<fieldset>
 			<div>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<table class="table table-striped">
-
+			
+				<table> <!-- this is a hack to at least open a table tag before we close it on the very first iteration. -->
 				{% for time in times %}
 				{% ifchanged time.project.pname %} 
-				<tr>
-					<td colspan="8">
-						<h3>
-						<input class="invoiceproject" 
+				</table>
+					<h3 class="projecttitle">
+						<input class="invoiceproject btn btn-large" 
 								type="checkbox" 
 								name="projects" 
 								value="{{ time.project.key }}" {% ifequal time.project.status 'empty' %} disabled {% endifequal %}>
 						{{ time.project.pname }} 
-						</h3> 
-					</td>
-				</tr>
+					<a class="btn btn-mini showtime" href="#table{{ time.invoice.inum }}"><span class="icon-th-list"></span></a>
+					</h3>
+					
+
+			<table id="table{{ time.invoice.inum }}" class="timelog table table-striped hide">
 				<tr>
 					<th>Status</th>
 					<th>Invoice #</th>
 					<th>Date</th>
-					<th>Note</th>
+					<th width="300">Note</th>
 					<th>Hours</th>
 					<th>Rate</th>
 					<th>Total</th>
@@ -134,7 +135,7 @@
 				{% endfor %}
 
 			</table>
-			<input id="newinvoice" class="btn btn-success pull-right" type="submit" value="New Invoice">		
+			<input id="newinvoice" class="btn btn-success btn-large pull-right" type="submit" value="New Invoice">		
 			</div>
 		</fieldset>
 	</form>

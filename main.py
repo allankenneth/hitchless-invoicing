@@ -180,7 +180,7 @@ class ProjectsHandler(webapp.RequestHandler):
             
             time_query = Time.all()
             time_query.filter('client =', k)
-            time_query.order('project')
+            time_query.order('-project')
             times = time_query.fetch(100)
 
             projects_query = Projects.all()
