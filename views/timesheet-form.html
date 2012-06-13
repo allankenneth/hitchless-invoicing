@@ -2,81 +2,91 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>hitchless</title>
-	<link rel="stylesheet" href="css/base.css" type="text/css">
-	<link rel="stylesheet" 
-			type="text/css" 
-			media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" 
-			href="/css/mobile.css">
+	<title>{{ client.0.business }} ~ {{ title }}</title>
+	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
+	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
 	<meta name="viewport" content="width=device-width,user-scalable=no">
-	<script type="text/javascript" src="scripts/jquery-1.5.1.min.js"></script>
-	<script type="text/javascript" src="scripts/hitchless.js"></script>
 </head>
-<body id="timesheet">
-<div id="container">
-<div id="main">
-    <section id="timeform" class="panel">
-    <header>
-    <h1><a href="/dashboard?clientkey={{ projectkeys.0.client.key }}">&bull;</a> {{ projectkeys.0.client.business }}</h1>
-    </header>
-    <select>
-    {% for client in allclients %}
-      <option value="{{ client.key }}">{{ client.business }}</option>
-		{% endfor %}
-	  </select>
-    <form id="addservice" action="/service" method="post">
-    <fieldset>
-        <legend>Add Service</legend>
-        <input type="text" name="service" size="20" placeholder="Service name">
-        $<input type="number" name="rate" size="5" placeholder="Rate">
-        /&nbsp;<input type="text" name="rateunit" size="2" placeholder="Unit"><br>
-        <input type="submit" value="Add Service">	
-    </fieldset>
-    </form>
-    <form id="timetrack" action="/timesheet" method="post">
-        <fieldset>
-            <legend>Add</legend>
-            <input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
-            <input type="hidden" id="worker" name="worker" value="Allan">
-            <select name="service">
-                {% for service in services %}
-                <option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
-                {% endfor %}
-            </select>
-            <a id="servicemenu" href="#addservice">+</a>
-            <br>
-            <select id="pid" name="pid">
-                {% for project in projectkeys %}
-                <option value="{{ project.key }}">{{ project.pname }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <input type="datetime-local" size="30" id="datetime" name="date" placeholder="YYYY-MM-DDTHH:MM:SS">
-            <br>
-            <textarea id="note" name="note" rows="4" cols="30" placeholder="Note"></textarea><br>
-            <input type="number" step="any" id="hours" name="hours" size="10" placeholder="Multiplier"><br>
-            <input type="submit" value="Add Time">
-        </fieldset>
-    </form>
-    <div id="timepost">
-        {% for entry in time %}
-        <div class="timeitems">
-            <div class="timeitem">
-                <a class="deleteitem" href="/timesheet?action=delete&tid={{ entry.key }}&pid={{ time.0.project.key }}">x</a> 
-                {{ entry.date }} - {{ entry.status }}
-                <hr>
-                <strong>{{ entry.hours }} x ${{ entry.rate }}/{{ entry.rateunit }} ${{ entry.total }}</strong>
-            </div>
-            <div class="timenote" id="time-{{ entry.key.id }}"><hr>{{ entry.note }} </div>
-        </div>
-        
-    {% endfor %}
-    </div>
+<body id="projectlist">
 
-    </section> <!-- /#timeform -->
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <span class="brand">{{ client.0.business }}</span>
+      <div class="nav-collapse">
+        <ul class="nav">
+<!--         	<li><a href="/dashboard?clientkey={{ client.0.key }}">Dashboard</a></li> -->
+        	<li><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
+        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
+			<li class="active"><a href="/timesheet?output=form&clientkey={{ client.0.key }}">Add Time</a></li>
+        	<li><a data-toggle="modal" href="#clientinfo">Contact</a></li>
+	        <li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+		       		Client List
+		       		<b class="caret"></b>
+		       	</a>
+		       	<ul class="dropdown-menu">
+					<li><a href="/">All</a></li>
+				{% for client in allclients %}
+					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
+						<a href="/projects?clientkey={{ client.key }}">{{ client.business }} </a>
+					</li>
+				{% endfor %}
+				</ul>
+			</li>
+        </ul>
+
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+    
+
+<div class="container-fluid">
+
+
+
+
+
+{% include "timeform.html" %}
+
+<div class="modal hide" id="clientinfo">
+ <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3>{{businessname}}</h3>
+  </div>
+  <div class="modal-body">
+	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+	<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
+	<div class="notes">{{ client.0.notes }}</div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+  </div>
+</div>
 
     
-</div> <!-- /#main -->
-</div> <!-- /#container -->
+</div> <!-- /.container -->
+
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
+<script src="/assets/js/bootstrap-tab.js"></script>
+<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="/assets/js/bootstrap-popover.js"></script>
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
+<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
+<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>

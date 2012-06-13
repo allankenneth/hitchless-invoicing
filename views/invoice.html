@@ -24,9 +24,23 @@
         <ul class="nav pull-left">
           	<li ><a href="/invoices?clientkey={{ times.0.invoice.client.key }}">Invoices</a></li> <!-- class="active" -->
         	<li><a href="/projects?clientkey={{ times.0.invoice.client.key }}">Projects</a></li>
+			<li><a href="/addtime?clientkey={{ times.0.invoice.client.key }}">Add Time</a></li>
         	<li><a data-toggle="modal" href="#clientinfo">Contact</a></li>
         </ul>
 
+
+
+
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+{% if message %}
+<div id="message">{{ message }}</div>
+{% endif %}
+
+		<div class="container">
 	        {% if times.0.invoice.checksum  %}
 	           <a class="btn btn-success pull-left send" href="/invoice?action=send&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Send {% ifequal times.0.invoice.status "sent" %} again{% endifequal %}
@@ -59,18 +73,12 @@
 	            <a class="btn btn-danger deleteitem pull-left" href="/invoice?action=delete&iid={{ times.0.invoice.key }}&cid={{ times.0.invoice.client.key }}">
 	                Delete
 	            </a>
+	           </div> <!-- /container -->
 
-
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
-</div>
-
-{% if message %}
-<div id="message">{{ message }}</div>
-{% endif %}
 <div class="container">
+
 <div class="hero-unit">
+
 <h1>Invoice #{{ times.0.invoice.inum }}</h1>
 <div class="row-fluid">
 <div class="span2">

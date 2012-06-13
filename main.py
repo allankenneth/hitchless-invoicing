@@ -293,7 +293,42 @@ class ServiceHandler(webapp.RequestHandler):
         action = '/projects?clientkey=' + self.request.get('clientkey')
         self.redirect(action)
 
+class AddTimesHandler(webapp.RequestHandler):
 
+    def get(self):
+
+        k = db.Key(self.request.get('clientkey'))
+        
+        clients_query = Clients.all()
+        clients_query.filter('__key__ = ', k)
+        client = clients_query.fetch(1)
+        
+        services_query = Services.all()
+        # TODO: make the filter below work, and 
+        # add UI to disable services
+
+        #services_query.filter('active =', 'True')
+        services = services_query.fetch(100)
+
+        projects_query = Projects.all()
+        projects_query.filter('client =', k)
+        projects = projects_query.fetch(100)
+
+        all_clients_query = Clients.all()
+        all_clients = all_clients_query.fetch(100)
+
+        template_values = {
+            'client': client,
+            'businessname': client[0].business,
+            'allclients': all_clients,
+            'projectkeys': projects,
+            'services': services,
+        }
+
+        path = os.path.join(os.path.dirname(__file__), 'views/timesheet-form.html')
+        self.response.out.write(template.render(path, template_values))
+            
+            
 class TimesheetHandler(webapp.RequestHandler):
 
     def get(self):
@@ -320,30 +355,7 @@ class TimesheetHandler(webapp.RequestHandler):
 #             self.redirect(action)
 
 
-        if(self.request.get('output') == "form"):
-            k = db.Key(self.request.get('clientkey'))
-            services_query = Services.all()
-            # TODO: make the filter below work, and 
-            # add UI to disable services
 
-            #services_query.filter('active =', 'True')
-            services = services_query.fetch(100)
-
-            projects_query = Projects.all()
-            projects_query.filter('client =', k)
-            projects = projects_query.fetch(100)
-
-            all_clients_query = Clients.all()
-            all_clients = all_clients_query.fetch(100)
-
-            template_values = {
-                'allclients': all_clients,
-                'projectkeys': projects,
-                'services': services,
-            }
-
-            path = os.path.join(os.path.dirname(__file__), 'views/timesheet-form.html')
-            self.response.out.write(template.render(path, template_values))
         else:
             pi = db.Key(self.request.get('pid'))
             time_query = Time.all()
@@ -397,7 +409,8 @@ class TimesheetHandler(webapp.RequestHandler):
         # the gdata API; otherwise, we take GMT and format it accoringly so
         # that we can do the math
         if self.request.get('date'):
-            end_time = self.request.get('date') + ":00"
+        #    end_time = self.request.get('date') + ":00"
+            end_time = self.request.get('date')
         else:
             end_time = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())
         the_end = datetime.strptime(end_time,'%Y-%m-%dT%H:%M:%S')
@@ -868,6 +881,7 @@ application = webapp.WSGIApplication([
                                       ('/', MainPage),
                                       ('/client', ClientHandler),
                                       ('/projects', ProjectsHandler),
+                                      ('/addtime', AddTimesHandler),
                                       ('/timesheet', TimesheetHandler),
                                       ('/invoice', InvoiceHandler),
                                       ('/invoices', InvoicesHandler),

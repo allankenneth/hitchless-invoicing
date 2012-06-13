@@ -11,16 +11,23 @@
 		foo = $(this).attr("href");
 		$(foo).toggle();
 	});
-	$(".invdetail").popover();
-	$('#showcinfo').modal({backdrop:'false', show:'false'})
-	$('#servicemenu').modal({backdrop:'false', show:'false'});
     $(".invoiceproject").on('click', function(){
     	$("#newinvoice").show();
     });
+    
+    
+	$(".invdetail").popover();
+	$(".datedetail").popover();
+	$(".notedetail").popover();
+	$('#showcinfo').modal({backdrop:'false', show:'false'})
+	$('#servicemenu').modal({backdrop:'false', show:'false'});
+
+/*
 	$('.sheet').on('click',function(e){
 		e.preventDefault();
 		foo = $(this).attr("href");
 		$(this).next(".sheetplaceholder").load(foo); 
 	});
+*/
 
 }(window.jQuery);
