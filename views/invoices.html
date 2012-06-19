@@ -1,124 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>{{ client.0.business }} ~ {{ title }}</title>
-	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
-	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
-	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
-	<meta name="viewport" content="width=device-width,user-scalable=no">
-</head>
-<body id="projectlist">
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>hitchless Invoicing</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="assets/css/jquery.mobile-1.1.0.min.css">
+	<link rel="stylesheet" href="assets/css/jqm.css" type="text/css">
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.mobile-1.1.0.min.js"></script>
+	</head> 
+<body> 
 
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <span class="brand">{{ businessname }}</span>
-      <div class="nav-collapse">
-        <ul class="nav">
-<!--         	<li><a href="/dashboard?clientkey={{ client.0.key }}">Dashboard</a></li> -->
-        	<li class="active"><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
-        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
-			<li><a href="/addtime?clientkey={{ client.0.key }}">Add Time</a></li>
-        	<li><a data-toggle="modal" href="#clientinfo">Contact</a></li>
-	        <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-		       		Client List
-		       		<b class="caret"></b>
-		       	</a>
-		       	<ul class="dropdown-menu">
-					<li><a href="/">All</a></li>
-				{% for client in allclients %}
-					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/projects?clientkey={{ client.key }}">{{ client.business }} </a>
-					</li>
-				{% endfor %}
-				</ul>
-			</li>
-        </ul>
- 
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
-</div>
-    
+<div data-role="page" id="invoices">
+	<div data-role="header">
+		<a href="/" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>{{ businessname }}</h1>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a class="ui-btn-active ui-state-persist" href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
+	        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
+				<li><a href="/addtime?clientkey={{ client.0.key }}">Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+		</div> <!-- /navbar -->
+	</div><!-- /header -->
 
-<div class="container-fluid">
+	<div data-role="content">
 
 
-<div class="modal hide fade" id="clientinfo">
- <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
+
+{% if invoices %}
+
+	<h2>Invoices</h2>
+	<ul data-role="listview" data-inset="true" data-filter="true" id="invoicelist">
+	{% for invoice in invoices %}
+	<li id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
+		<a href="/invoice?iid={{ invoice.key }}"  data-ajax="false">
+		    #{{ invoice.inum }}
+		    <strong>${{ invoice.totalbill }}</strong>
+			{{ invoice.date }}  <!--  invoice.date|date:"j-M" -->
+			{{ invoice.status }}
+		</a>
+	</li>
+	{% endfor %}
+	</ul>
+
+{% endif %}
+
+</div> <!-- /content -->
+
+</div> <!-- /invoices -->
+
+<div data-role="page" id="clientcontact">
+
     <h3>{{businessname}}</h3>
-  </div>
-  <div class="modal-body">
+
 	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
 	<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
 	<div class="notes">{{ client.0.notes }}</div>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal">Close</a>
-  </div>
-</div>
-{% if invoices %}
-<div id="invoices" class="well tab-pane span6">
-<h2>Invoices</h2>
-<table class="table table-striped">
-<tr>
-	<th>Invoice #</th>
-	<th>Total</th>
-	<th>Date</th>
-	<th>Status</th>
-	<th></th>
-</tr>
-	{% for invoice in invoices %}
-	<tr>
-	<td id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
-		    <span class="badge">#{{ invoice.inum }}</span>
-	</td>
-	<td>
-		    <strong>${{ invoice.totalbill }}</strong>
-	</td>
-	<td>
-		    {{ invoice.date }}  <!--  invoice.date|date:"j-M" -->
-	</td>
-	<td>
-			<span class="label 
-		    {% ifequal invoice.status 'paid' %} label-success {% endifequal %}
-		    {% ifequal invoice.status 'invoiced' %} label-info {% endifequal %}
-		    {% ifequal invoice.status 'sent' %} label-warning {% endifequal %}
-		    ">{{ invoice.status }}</span>
-	</td>
-	<td>
-		<a href="/invoice?iid={{ invoice.key }}" class="total">View</a>
-	    
-	</td>
-	</tr>
-	{% endfor %}
-	</table>
-</div> <!-- /#invoices -->
-{% endif %}
 
 </div>
-
-<script src="/assets/js/jquery.js"></script>
-<script src="/assets/js/bootstrap-transition.js"></script>
-<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
-<script src="/assets/js/bootstrap-modal.js"></script>
-<script src="/assets/js/bootstrap-dropdown.js"></script>
-<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
-<script src="/assets/js/bootstrap-tab.js"></script>
-<script src="/assets/js/bootstrap-tooltip.js"></script>
-<script src="/assets/js/bootstrap-popover.js"></script>
-<script src="/assets/js/bootstrap-button.js"></script>
-<script src="/assets/js/bootstrap-collapse.js"></script>
-<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
-<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
-<script src="/assets/js/hitchless.js"></script>
 </body>
 </html>

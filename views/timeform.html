@@ -1,31 +1,17 @@
-	<div id="timeform" class="span3">
-		<!-- <header><h1>Tracker</h1></header> -->
-		<div id="timetrack">
-		<div class="modal hide fade" id="addservice">
-		 <div class="modal-header">
-		     <button type="button" class="close" data-dismiss="modal">×</button>
-		 	<h3>Add Service</h3>
-		 </div>
-		 <div class="modal-body">
-			<form id="addservice" class="well" action="/service" method="post">
-			<fieldset>
-				<legend></legend>
-			    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
-			    <input type="text" name="service" id="servicename" class="span2" size="20" placeholder="Service name">
-				$<input type="number" name="rate" class="input-mini" size="5" placeholder="Rate">
-				/&nbsp;<input type="text" name="rateunit" class="input-mini" size="2" placeholder="Unit"><br>
-				<input type="submit" class="btn btn-primary" value="Add Service">	
-			</fieldset>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-		    <a href="#" class="btn" data-dismiss="modal">Close</a>
-		  </div>
-		</div> <!-- /.modal -->
+	<div data-role="page" id="timeform">
+
+
+	<div data-role="header">
+		<a href="/" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>Add Time</h1>
+	</div> <!-- /header -->
+	<div data-role="content">
 		
 		<form action="/timesheet" class="well" method="post">
 			<fieldset>
-				<legend>Add Time</legend>
 				<input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
 				<input type="hidden" id="worker" name="worker" value="Allan">
 		
@@ -49,8 +35,22 @@
 				<input type="submit" class="btn btn-success btn-large pull-left" value="Add Time">
 			</fieldset>
 		</form>
-		</div>  <!-- /#timetrack -->
-		<div id="timepost"></div>
+
+
+	</div> <!-- /content -->
 	
 	</div> <!-- /#timeform -->
-	
+
+<div data-role="page" id="addservice">
+			<form id="addservice" class="well" action="/service" method="post">
+			<fieldset>
+				<legend></legend>
+			    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
+			    <input type="text" name="service" id="servicename" class="span2" size="20" placeholder="Service name">
+				$<input type="number" name="rate" class="input-mini" size="5" placeholder="Rate">
+				/&nbsp;<input type="text" name="rateunit" class="input-mini" size="2" placeholder="Unit"><br>
+				<input type="submit" class="btn btn-primary" value="Add Service">	
+			</fieldset>
+			</form>
+
+</div> <!-- /addservice -->

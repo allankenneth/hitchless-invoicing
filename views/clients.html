@@ -1,119 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Hitchless</title>
-	<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css">
-	<link rel="stylesheet" href="assets/css/bootstrap-responsive.css" type="text/css">
-	<link rel="stylesheet" href="assets/css/hitchless.css" type="text/css">
-	<meta name="viewport" content="width=device-width,user-scalable=no">
-</head>
-<body>
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <a class="brand">hitchless Invoicing</a>
-      <div class="nav-collapse">
-        <a class="btn btn-mini pull-right" href="{{ url }}">{{ url_linktext }}</a>
-        <a data-toggle="modal" class="btn btn-success btn-nav pull-left" href="#addclient">Add Client</a>
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>hitchless Invoicing</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="assets/css/jquery.mobile-1.1.0.min.css">
+	<link rel="stylesheet" href="assets/css/jqm.css" type="text/css">
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.mobile-1.1.0.min.js"></script>
+</head> 
+<body> 
 
-		<div class="btn-group pull-left">
+<div data-role="page" id="clientlist">
 
-				<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
-	        		Client List
-	        		<b class="caret"></b>
-	        	</a>
-	        	<ul class="dropdown-menu">
-				{% for client in clients %}
-					<li {% ifequal client.business businessname %} class="active" {% endifequal %}>
-						<a href="/projects?clientkey={{ client.key }}">{{ client.business }} </a>
-					</li>
-				{% endfor %}
-				</ul>
-		</div>
+	<div data-role="header">
+		<h1>Clients</h1>
+		<a href="#addclient" 
+			data-role="button" 
+			data-icon="plus" 
+			data-theme="a">Add client</a>
+	</div><!-- /header -->
 
-        
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
-</div>
+	<div data-role="content">	
 
-<div class="container-fluid">
-	<div class="hero-unit">
-		<h1>Welcome.</h1>
-		<p>Over 12 projects with 6 clients, you've made <strong>$22,315</strong> in 20 weeks.</p>
-		<p>You have <strong>$1200</strong> in unpaid invoices.</p>
-		<div><a href="#" class="btn btn-primary btn-large">Graphs coming soon.</a></div>
-	</div>
-<div class="fluid-row">
-<div class="span 7">
-	<h2>Clients</h2>
-	<table class="table table-striped" id="clientlist">
-	<tr>
-		<th>Business</th>
-		<th>Name</th>
-		<th>Email</th>
-	</tr>
+	
+	<ul data-role="listview" data-inset="true" data-filter="true" id="clientlist">
+
 	{% if clients %}
 	{% for client in clients %}
-		<tr>
-			<td><a href="/projects?clientkey={{ client.key }}">{{ client.business }}</a></td>
-			<td>{{ client.name }}</td>
-			<td><a href="maitlo:{{ client.email }}">{{ client.email }}</a></td>
-		</tr>
+		<li>
+			<a href="/projects?clientkey={{ client.key }}" data-ajax="false">{{ client.business }}</a>
+		</li>
 	{% endfor %}
 	{% else %}
-		<tr>
-			<td><p>No contacts.</p></td>
-		</tr>
+
+		<li><p>No contacts.</p></li>
+
 	{% endif %}
 	</ul>
-</div> <!-- /well span7 -->
-</div> <!-- /fluid-row -->
+	
+	</div><!-- /content -->
 
-<div class="modal hide fade" id="addclient">
- <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Add a client.</h3>
-  </div>
-  <div class="modal-body">
-		<form method="post" action="/client" class="">
-		    <fieldset>
-		        <div>
-		        <div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
-		        <div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
-		        <div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
-		        <div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
-		        <div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
-		        <button class="btn btn-primary">Add Client</button>
-		        </div>
-		    </fieldset>
-		</form>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal">Close</a>
-  </div>
-</div>
+</div><!-- /page -->
 
 
-<script src="/assets/js/jquery.js"></script>
-<script src="/assets/js/bootstrap-transition.js"></script>
-<!-- <script src="/assets/js/bootstrap-alert.js"></script> -->
-<script src="/assets/js/bootstrap-modal.js"></script>
-<script src="/assets/js/bootstrap-dropdown.js"></script>
-<!-- <script src="/assets/js/bootstrap-scrollspy.js"></script> -->
-<script src="/assets/js/bootstrap-tab.js"></script>
-<script src="/assets/js/bootstrap-tooltip.js"></script>
-<script src="/assets/js/bootstrap-popover.js"></script>
-<script src="/assets/js/bootstrap-button.js"></script>
-<script src="/assets/js/bootstrap-collapse.js"></script>
-<!-- <script src="/assets/js/bootstrap-carousel.js"></script> -->
-<!-- <script src="/assets/js/bootstrap-typeahead.js"></script> -->
-<script src="/assets/js/hitchless.js"></script>
+<div data-role="page" id="addclient" data-title="Add Client">
+	<div data-role="header">
+		<h1>Add Client</h1>
+		<a href="#clientlist" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		
+	<form method="post" action="/client" class="form">
+		<fieldset>
+			<div>
+			<div><label><span>Business</span> <input type="text" name="business" size="20"></label></div>
+			<div><label><span>Name</span> <input type="text" name="name" size="20"></label></div>
+			<div><label><span>Title</span> <input type="text" name="title" size="20"></label></div>
+			<div><label><span>Email</span> <input type="email" name="email" size="20"></label></div>
+			<div><label>Notes:<br><textarea name="notes" cols="30" rows="5"></textarea></label></div>
+			<button class="btn btn-primary">Add Client</button>
+			</div>
+		</fieldset>
+		
+	</form>
+	
+	</div><!-- /content -->
+
+</div><!-- /page -->
+
 </body>
 </html>

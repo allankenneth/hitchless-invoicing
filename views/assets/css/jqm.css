@@ -1,0 +1,12 @@
+.hide {
+	display: none;
+}
+#addclient{
+	margin-bottom: 20px;
+}
+.row {
+	margin: 0 0 20px 0;
+}
+.ui-collapsible-content {
+	background: #FFF;
+}

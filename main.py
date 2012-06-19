@@ -89,7 +89,6 @@ class Invoices(db.Model):
     qrchecksum = db.BlobProperty()
 
 class Time(db.Model):
-    #TODO Um, hello? date is a string?
     client = db.ReferenceProperty(Clients)
     invoice = db.ReferenceProperty(Invoices)
     project = db.ReferenceProperty(Projects)
@@ -202,7 +201,6 @@ class ProjectsHandler(webapp.RequestHandler):
                 'times': times,
                 'allclients': all_clients,
                 'client': client,
-                'foo': projects,
                 'businessname': client[0].business,
                 'services': services,
                 'projectkeys': projects,
@@ -269,7 +267,7 @@ class ProjectHandler(webapp.RequestHandler):
         projects.status = 'empty'
         projects.summary = 0
         projects.put()
-        action = '/projects?clientkey=' + self.request.get('clientkey') + ''
+        action = '/addtime?clientkey=' + self.request.get('clientkey') + 'p=' + projects.key
         self.redirect(action)
 
 
