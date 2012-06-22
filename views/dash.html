@@ -1,0 +1,331 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>hitchless Invoicing</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="assets/css/jquery.mobile-1.1.0.min.css">
+	<link rel="stylesheet" href="assets/css/jqm.css" type="text/css">
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.mobile-1.1.0.min.js"></script>
+<!-- 	<script src="assets/js/jqm.js"></script> -->
+	</head> 
+<body> 
+
+<div data-role="page" id="projects">
+	<div data-role="header">
+		<a href="/" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>{{ businessname }}</h1>
+
+		<!-- WTF won't this work!? -->
+		<a href="#clientcontact">?</a>
+
+		
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" >Invoices</a></li>
+	        	<li><a class="ui-btn-active ui-state-persist" href="#projects" >Projects</a></li>
+				<li><a href="#timeform" >Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+		</div> <!-- /navbar -->
+		
+	</div><!-- /header -->
+
+	<div data-role="content">
+	
+	<div data-role="controlgroup" data-type="horizontal" class="">
+		<a href="#newinvoice" data-role="button">New Invoice</a>
+		<a href="#addproject" data-role="button">Add Project</a>
+	</div> <!-- /controlgroup -->
+    	    
+		{% if times %}
+		<div data-role="collapsible-set">
+		
+		
+		{% for time in times %}	
+		{% ifchanged time.project.pname %} 
+		{% ifnotequal forloop.counter 1 %}
+		</div>
+		{% endifnotequal %}
+		<div data-role="collapsible" id="{{ time.project.pname|slugify }}">
+		
+			<h2>{{ time.project.pname }}</h2>
+		
+		{% endifchanged %}
+			<div class="row">
+				<div>{{ time.status }}</div>
+				<div>
+				{% if time.invoice.inum %}
+					Invoice #{{ time.invoice.inum }}
+				{% endif %} 
+				</div>
+				<div>
+					{{ time.date|date:"D F j y P" }}
+					{% ifnotequal time.status 'invoiced' %}
+					<a href="/project?action=delete&pid={{ time.project.key }}&cid={{ time.client.key }}">
+						x
+					</a>
+					{% endifnotequal %}
+				</div> 
+				<div>{{ time.hours }} &times; ${{ time.rate }}/{{ time.rateunit }} = ${{ time.total }}</div>
+				<div>{{ time.note }}</div>
+
+			</div>
+		
+		{% if forloop.last %}
+			</div>
+		{% endif %}
+		
+		
+		{% endfor %}
+		
+		</div>
+		{% endif %}
+			
+	</div> <!-- /content -->
+	
+</div> <!-- /projects -->
+	
+
+
+
+	
+<div data-role="page" id="newinvoice" data-title="New Invoice">
+	<div data-role="header">
+		<a href="#projects" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>New Invoice</h1>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" >Invoices</a></li>
+	        	<li><a href="#projects" >Projects</a></li>
+				<li><a href="#timeform" >Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+
+		</div> <!-- /navbar -->
+	</div> <!-- /header -->
+	<div data-role="content">
+	
+	<div data-role="controlgroup" data-type="horizontal">
+		<a href="#newinvoice"  class="ui-btn-active ui-state-persist" data-role="button">New Invoice</a>
+		<a href="#addproject" data-role="button">Add Project</a>
+	</div> <!-- /controlgroup -->
+	
+	
+	<form action="/invoice" method="post" id="addinvoice" >
+		<fieldset>
+			<input type="hidden" name="clientkey" value="{{ clientkey }}">
+			<select name="projects" multiple="multiple" data-native-menu="false">
+				<option data-placeholder="true">Select Projects</option>
+			{% for project in projectkeys %}
+			{% ifnotequal project.status 'empty' %}
+				<option value="{{ project.key }}">{{ project.pname }}</option>
+			{% endifnotequal %}
+			{% endfor %}
+			</select>
+			<input type="submit" data-theme="b" value="Create Invoice">
+		</fieldset>
+	</form>
+	</div> <!-- /content -->
+</div> <!-- /newinvoice -->	
+
+
+
+<div data-role="page" id="addproject">
+	<div data-role="header">
+		<a href="#projects" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>Add a project</h1>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" >Invoices</a></li>
+	        	<li><a href="#projects" >Projects</a></li>
+				<li><a href="#timeform" >Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+
+		</div> <!-- /navbar -->
+	</div>
+	<div data-role="content">
+
+
+	<div data-role="controlgroup" data-type="horizontal">
+		<a href="#newinvoice" data-role="button">New Invoice</a>
+		<a href="#addproject" class="ui-btn-active ui-state-persist" data-role="button">Add Project</a>
+	</div> <!-- /controlgroup -->
+
+		<form action="/project" method="post" data-ajax="false">
+			<fieldset>
+			<div>
+				<input type="hidden" name="clientkey" value="{{ clientkey }}">
+				<input type="text" id="pname" name="pname" placeholder="Project name">
+		<!--		<label>Budget <input type="number" id="budget" name="budget" size="5" placeholder="hrs"></label> -->
+				<input type="submit" value="Add Project">
+			</div>
+			</fieldset>
+		</form>
+	</div> <!-- /content -->
+</div> <!-- /#addproject -->
+
+
+<div data-role="page" id="invoices">
+	<div data-role="header">
+		<a href="#projects" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>Invoices</h1>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a class="ui-btn-active ui-state-persist" href="#invoices" >Invoices</a></li>
+	        	<li><a href="#projects" >Projects</a></li>
+				<li><a href="/addtime?clientkey={{ client.0.key }}" >Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+		</div> <!-- /navbar -->
+	</div>
+	<div data-role="content">
+
+{% if invoices %}
+
+
+	<ul data-role="listview" data-inset="true" data-filter="true" id="invoicelist">
+	{% for invoice in invoices %}
+	<li id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
+		<a href="/invoice?iid={{ invoice.key }}" data-ajax="false">
+		    #{{ invoice.inum }}
+			{{ invoice.date|date:"M jS" }}  <!--  invoice.date|date:"j-M" -->
+			<small>{{ invoice.status }}</small>
+		    <span class="ui-li-count">${{ invoice.totalbill|floatformat:2 }}</span>
+		</a>
+	</li>
+	{% endfor %}
+	</ul>
+
+{% endif %}
+
+	</div> <!-- /content -->
+</div> <!-- /#invoices -->
+
+
+
+
+<div data-role="page" id="timeform">
+	<div data-role="header">
+		<a href="/" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>{{ businessname }}</h1>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" >Invoices</a></li>
+	        	<li><a href="#projects" >Projects</a></li>
+				<li><a class="ui-btn-active ui-state-persist" href="#timeform" >Add Time</a></li>
+<!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+			<ul class="nav">
+				<li><a href="#addservice" data-role="button">Add Service</a></li>
+			</ul>
+		</div> <!-- /navbar -->
+	</div><!-- /header -->
+
+	<div data-role="content">
+
+		
+		
+		<form action="/timesheet" class="well" method="post"  >
+			<fieldset>
+				<input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
+				<input type="hidden" id="worker" name="worker" value="Allan">
+		
+				<br>
+				<select id="pid" name="pid">
+					{% for project in projectkeys %}
+					<option value="{{ project.key }}">{{ project.pname }}</option>
+					{% endfor %}
+				</select>
+				<br>
+				<input type="datetime-local" size="30" id="datetime" name="date" placeholder="YYYY-MM-DDTHH:MM:SS">
+				<br>
+				<textarea id="note" name="note" rows="4" cols="30" placeholder="Note"></textarea><br>
+				<select class="pulleft" id="servicemenuss" name="service">
+					{% for service in services %}
+					<option value="{{ service.service }} || {{ service.rate }} || {{ service.rateunit }}">{{ service.service }} ${{ service.rate }}/{{ service.rateunit }}</option>
+					{% endfor %}
+				</select>
+				<a class="btn btn-mini pull-right" data-toggle="modal" href="#addservice"><span class="icon-plus-sign"></span></a><br>
+				<input type="number" class="input-mini pull-left" step="any" id="hours" name="hours" size="4" placeholder="Multiplier"><br>
+				<input type="submit" class="btn btn-success btn-large pull-left" value="Add Time">
+			</fieldset>
+		</form>
+
+
+	</div> <!-- /content -->
+	
+	</div> <!-- /#timeform -->
+
+<div data-role="page" id="addservice">
+
+	<div data-role="header">
+		<a href="#timeform" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>Add Service</h1>
+	</div> <!-- /header -->
+	<div data-role="content">
+	
+	
+			<form id="addservice" class="well" action="/service" method="post">
+			<fieldset>
+				<legend></legend>
+			    <input type="hidden" name="clientkey" value="{{ projectkeys.0.client.key }}">
+			    <input type="text" name="service" id="servicename" class="span2" size="20" placeholder="Service name">
+				$<input type="number" name="rate" class="input-mini" size="5" placeholder="Rate">
+				/&nbsp;<input type="text" name="rateunit" class="input-mini" size="2" placeholder="Unit"><br>
+				<input type="submit" class="btn btn-primary" value="Add Service">	
+			</fieldset>
+			</form>
+	</div> <!-- /content -->
+</div> <!-- /addservice -->
+
+
+
+
+
+
+<div data-role="page" id="clientcontact">
+	<div data-role="header">
+		<a href="#projects" 
+			data-role="button" 
+			data-icon="back" 
+			data-theme="a">Back</a>
+		<h1>{{businessname}}</h1>
+	</div>
+	<div data-role="content">
+
+
+		    <h3>{{businessname}}</h3>
+		
+			<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+			<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
+			<div class="notes">{{ client.0.notes }}</div>
+		
+
+	</div> <!-- /content -->
+</div> <!-- /#clientcontact -->
+
+
+
+
+</body>
+</html>

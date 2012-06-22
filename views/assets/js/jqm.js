@@ -9,9 +9,9 @@ $(document).ready(function(){
 	$('.shown').click(function(){
 /* 		e.preventDefault(); */
 		foo = $(this).attr("href");
-		bar = foo + ' input:first';
-		$(foo).show();
-		$(bar).focus();
+
+		$(foo).toggle();
+
 	});
 
     

@@ -19,9 +19,9 @@
 		<h1>{{ businessname }}</h1>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a class="ui-btn-active ui-state-persist" href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
-	        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
-				<li><a href="/addtime?clientkey={{ client.0.key }}">Add Time</a></li>
+	        	<li><a class="ui-btn-active ui-state-persist" href="/invoices?clientkey={{ client.0.key }}" >Invoices</a></li>
+	        	<li><a href="/dashboard?clientkey={{ client.0.key }}" >Projects</a></li>
+				<li><a href="/addtime?clientkey={{ client.0.key }}"  >Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
 		</div> <!-- /navbar -->
@@ -33,15 +33,15 @@
 
 {% if invoices %}
 
-	<h2>Invoices</h2>
+
 	<ul data-role="listview" data-inset="true" data-filter="true" id="invoicelist">
 	{% for invoice in invoices %}
 	<li id="invoice-{{ invoice.key.id }}" class="inv {{ invoice.status }}">	
-		<a href="/invoice?iid={{ invoice.key }}"  data-ajax="false">
+		<a href="/invoice?iid={{ invoice.key }}" data-ajax="false">
 		    #{{ invoice.inum }}
-		    <strong>${{ invoice.totalbill }}</strong>
-			{{ invoice.date }}  <!--  invoice.date|date:"j-M" -->
-			{{ invoice.status }}
+			{{ invoice.date|date:"M jS" }}  <!--  invoice.date|date:"j-M" -->
+			<small>{{ invoice.status }}</small>
+		    <span class="ui-li-count">${{ invoice.totalbill|floatformat:2 }}</span>
 		</a>
 	</li>
 	{% endfor %}

@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="assets/css/jqm.css" type="text/css">
 	<script src="assets/js/jquery.min.js"></script>
 	<script src="assets/js/jquery.mobile-1.1.0.min.js"></script>
+<!-- 	<script src="assets/js/jqm.js"></script> -->
 	</head> 
 <body> 
 
@@ -17,18 +18,22 @@
 			data-icon="back" 
 			data-theme="a">Back</a>
 		<h1>{{ businessname }}</h1>
+		<a href="#clientcontact" class="shown">?</a>
+
+		
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
-	        	<li><a class="ui-btn-active ui-state-persist" href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
-				<li><a href="/addtime?clientkey={{ client.0.key }}">Add Time</a></li>
+	        	<li><a href="/invoices?clientkey={{ client.0.key }}" >Invoices</a></li>
+	        	<li><a class="ui-btn-active ui-state-persist" href="/projects?clientkey={{ client.0.key }}" >Projects</a></li>
+				<li><a href="/addtime?clientkey={{ client.0.key }}" >Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
 	        <ul class="nav">
 		        <li><a href="#newinvoice">New Invoice</a></li>
-		        <li><a href="#addproject">Add Project</a></li>
+		        <li><a href="#addproject"x>Add Project</a></li>
 	        </ul>
 		</div> <!-- /navbar -->
+		
 	</div><!-- /header -->
 
 	<div data-role="content">
@@ -42,7 +47,7 @@
 		{% for time in times %}	
 		{% ifchanged time.project.pname %} 
 		</div>
-		<div data-role="collapsible">
+		<div data-role="collapsible" id="{{ pslug }}">
 		
 			<h2>{{ time.project.pname }}</h2>
 		
@@ -94,7 +99,7 @@
 		<h1>New Invoice</h1>
 	</div> <!-- /header -->
 	<div data-role="content">
-	<form action="/invoice" method="post" id="addinvoice" data-ajax="false">
+	<form action="/invoice" method="post" id="addinvoice" >
 		<fieldset>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
 			<select name="projects" multiple="multiple" data-native-menu="false">
@@ -122,7 +127,7 @@
 		<h1>Add a project</h1>
 	</div>
 	<div data-role="content">
-		<form action="/project" method="post" data-ajax="false">
+		<form action="/project" method="post" >
 			<fieldset>
 			<div>
 				<input type="hidden" name="clientkey" value="{{ clientkey }}">
@@ -136,16 +141,16 @@
 </div> <!-- /#addproject -->
 
 
+		<div id="clientcontact">
 
-<div data-role="page" id="clientcontact">
+		    <h3>{{businessname}}</h3>
+		
+			<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
+			<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
+			<div class="notes">{{ client.0.notes }}</div>
+		
+		</div>
 
-    <h3>{{businessname}}</h3>
-
-	<div class="name">{{ client.0.name }}, <span class="title">{{ client.0.title }}</span></div>
-	<div class="email"><a href="mailto:{{ client.0.email }}"><i class="icon-envelope"></i>{{ client.0.email }}</a></div>
-	<div class="notes">{{ client.0.notes }}</div>
-
-</div>
 
 
 

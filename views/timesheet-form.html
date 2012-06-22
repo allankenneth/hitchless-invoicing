@@ -19,9 +19,9 @@
 		<h1>{{ businessname }}</h1>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="/invoices?clientkey={{ client.0.key }}">Invoices</a></li>
-	        	<li><a href="/projects?clientkey={{ client.0.key }}">Projects</a></li>
-				<li><a class="ui-btn-active ui-state-persist" href="/addtime?clientkey={{ client.0.key }}">Add Time</a></li>
+	        	<li><a href="/invoices?clientkey={{ client.0.key }}" >Invoices</a></li>
+	        	<li><a href="/projects?clientkey={{ client.0.key }}" >Projects</a></li>
+				<li><a class="ui-btn-active ui-state-persist" href="/addtime?clientkey={{ client.0.key }}" >Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
 			<ul class="nav">
@@ -34,7 +34,7 @@
 
 		
 		
-		<form action="/timesheet" class="well" method="post">
+		<form action="/timesheet" class="well" method="post"  >
 			<fieldset>
 				<input type="hidden" id="clientkey" name="clientkey" value="{{ projectkeys.0.client.key }}">
 				<input type="hidden" id="worker" name="worker" value="Allan">
@@ -91,9 +91,6 @@
 </div> <!-- /addservice -->
 
 
-	</div> <!-- /content -->
-
-</div> <!-- /timeform -->
 
 
 <div data-role="page" id="clientcontact">
