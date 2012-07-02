@@ -28,7 +28,7 @@
 	{% if clients %}
 	{% for client in clients %}
 		<li>
-			<a href="/projects?clientkey={{ client.key }}" data-ajax="false">{{ client.business }}</a>
+			<a href="/dashboard?clientkey={{ client.key }}" data-ajax="false">{{ client.business }}</a>
 		</li>
 	{% endfor %}
 	{% else %}

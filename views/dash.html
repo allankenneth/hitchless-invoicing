@@ -5,9 +5,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<link rel="stylesheet" href="assets/css/jquery.mobile-1.1.0.min.css">
 	<link rel="stylesheet" href="assets/css/jqm.css" type="text/css">
+	
+	<link rel="stylesheet" href="assets/css/jquery.swipeButton-1.2.css" type="text/css">
+	
 	<script src="assets/js/jquery.min.js"></script>
 	<script src="assets/js/jquery.mobile-1.1.0.min.js"></script>
-<!-- 	<script src="assets/js/jqm.js"></script> -->
+	<script src="assets/js/jquery.swipeButton-1.2.0.min.js"></script>
+	<script src="assets/js/jqm.js"></script>
 	</head> 
 <body> 
 
@@ -15,31 +19,28 @@
 	<div data-role="header">
 		<a href="/" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
+			data-icon="back"  data-transition="none" data-ajax="none" 
+			data-theme="a" data-ajax="none">Back</a>
 		<h1>{{ businessname }}</h1>
 
-		<!-- WTF won't this work!? -->
-		<a href="#clientcontact">?</a>
-
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
 		
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="#invoices" >Invoices</a></li>
-	        	<li><a class="ui-btn-active ui-state-persist" href="#projects" >Projects</a></li>
-				<li><a href="#timeform" >Add Time</a></li>
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a class="ui-btn-active ui-state-persist" href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
+			</ul>
+			<ul class="nav">
+	        	<li><a href="#addproject" data-role="button" data-transition="none">Add Project</a></li>
 			</ul>
 		</div> <!-- /navbar -->
 		
 	</div><!-- /header -->
 
 	<div data-role="content">
-	
-	<div data-role="controlgroup" data-type="horizontal" class="">
-		<a href="#newinvoice" data-role="button">New Invoice</a>
-		<a href="#addproject" data-role="button">Add Project</a>
-	</div> <!-- /controlgroup -->
+
     	    
 		{% if times %}
 		<div data-role="collapsible-set">
@@ -50,32 +51,35 @@
 		{% ifnotequal forloop.counter 1 %}
 		</div>
 		{% endifnotequal %}
-		<div data-role="collapsible" id="{{ time.project.pname|slugify }}">
+		<div data-role="collapsible" id="{{ pslug }}" >
+		
+		
 		
 			<h2>{{ time.project.pname }}</h2>
-		
+		{% ifequal pslug time.project.key %} <h1>TFG</h1> {% endifequal %}	
+			<ul data-role="listview" data-inset="true" data-filter="true" class="timelist" id="timelist">
 		{% endifchanged %}
-			<div class="row">
-				<div>{{ time.status }}</div>
+			<li class="{{ time.status }}" data-swipeurl="/project?action=delete&pid={{ time.project.key }}&cid={{ time.client.key }}">
+				
+				<h3>{{ time.note }}</h3>
+				
+				<div>
+					{{ time.date|date:"D F jS 'y P" }}
+					{% ifnotequal time.status 'invoiced' %}
+
+					{% endifnotequal %}
+				</div>
+				<div>{{ time.hours }} &times; ${{ time.rate }}/{{ time.rateunit }} = ${{ time.total }}</div>
 				<div>
 				{% if time.invoice.inum %}
-					Invoice #{{ time.invoice.inum }}
+					<small>Invoice #{{ time.invoice.inum }}</small>
 				{% endif %} 
 				</div>
-				<div>
-					{{ time.date|date:"D F j y P" }}
-					{% ifnotequal time.status 'invoiced' %}
-					<a href="/project?action=delete&pid={{ time.project.key }}&cid={{ time.client.key }}">
-						x
-					</a>
-					{% endifnotequal %}
-				</div> 
-				<div>{{ time.hours }} &times; ${{ time.rate }}/{{ time.rateunit }} = ${{ time.total }}</div>
-				<div>{{ time.note }}</div>
 
-			</div>
+			</li>
 		
 		{% if forloop.last %}
+			</ul>
 			</div>
 		{% endif %}
 		
@@ -87,6 +91,8 @@
 			
 	</div> <!-- /content -->
 	
+
+	
 </div> <!-- /projects -->
 	
 
@@ -97,39 +103,37 @@
 	<div data-role="header">
 		<a href="#projects" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
-		<h1>New Invoice</h1>
+			data-icon="back"  data-transition="none" data-ajax="none" 
+			data-theme="a" data-ajax="none">Back</a>
+		<h1>{{ businessname }}</h1>
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="#invoices" >Invoices</a></li>
-	        	<li><a href="#projects" >Projects</a></li>
-				<li><a href="#timeform" >Add Time</a></li>
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
-
+			<ul class="nav">
+	        	<li><a href="#newinvoice" class="ui-btn-active ui-state-persist" data-role="button" data-transition="none">New Invoice</a></li>
+			</ul>
 		</div> <!-- /navbar -->
 	</div> <!-- /header -->
 	<div data-role="content">
-	
-	<div data-role="controlgroup" data-type="horizontal">
-		<a href="#newinvoice"  class="ui-btn-active ui-state-persist" data-role="button">New Invoice</a>
-		<a href="#addproject" data-role="button">Add Project</a>
-	</div> <!-- /controlgroup -->
+
 	
 	
-	<form action="/invoice" method="post" id="addinvoice" >
+	<form action="/invoice" method="post" id="addinvoice" data-ajax="none">
 		<fieldset>
 			<input type="hidden" name="clientkey" value="{{ clientkey }}">
-			<select name="projects" multiple="multiple" data-native-menu="false">
-				<option data-placeholder="true">Select Projects</option>
+
 			{% for project in projectkeys %}
 			{% ifnotequal project.status 'empty' %}
-				<option value="{{ project.key }}">{{ project.pname }}</option>
+			<label><input type="checkbox" name="projects" value="{{ project.key }}">{{ project.pname }}</label>
 			{% endifnotequal %}
 			{% endfor %}
-			</select>
-			<input type="submit" data-theme="b" value="Create Invoice">
+
+			<input type="submit" value="Create Invoice">
 		</fieldset>
 	</form>
 	</div> <!-- /content -->
@@ -141,26 +145,24 @@
 	<div data-role="header">
 		<a href="#projects" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
-		<h1>Add a project</h1>
+			data-icon="back" data-transition="none"
+			data-theme="a" data-ajax="none">Back</a>
+		<h1>{{ businessname }}</h1>
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="#invoices" >Invoices</a></li>
-	        	<li><a href="#projects" >Projects</a></li>
-				<li><a href="#timeform" >Add Time</a></li>
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
-
+			<ul class="nav">
+	        	<li><a href="#addproject" class="ui-btn-active ui-state-persist" data-role="button" data-transition="none">Add Project</a></li>
+			</ul>
 		</div> <!-- /navbar -->
 	</div>
 	<div data-role="content">
 
-
-	<div data-role="controlgroup" data-type="horizontal">
-		<a href="#newinvoice" data-role="button">New Invoice</a>
-		<a href="#addproject" class="ui-btn-active ui-state-persist" data-role="button">Add Project</a>
-	</div> <!-- /controlgroup -->
 
 		<form action="/project" method="post" data-ajax="false">
 			<fieldset>
@@ -178,18 +180,22 @@
 
 <div data-role="page" id="invoices">
 	<div data-role="header">
-		<a href="#projects" 
+		<a href="/ " 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
-		<h1>Invoices</h1>
+			data-icon="back"  data-transition="none" data-ajax="none" 
+			data-theme="a" data-ajax="none">Back</a>
+		<h1>{{ businessname }}</h1>
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a class="ui-btn-active ui-state-persist" href="#invoices" >Invoices</a></li>
-	        	<li><a href="#projects" >Projects</a></li>
-				<li><a href="/addtime?clientkey={{ client.0.key }}" >Add Time</a></li>
+	        	<li><a class="ui-btn-active ui-state-persist" href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
+			<ul class="nav">
+	        	<li><a href="#newinvoice" data-role="button" data-transition="none">New Invoice</a></li>
+	        </ul>
 		</div> <!-- /navbar -->
 	</div>
 	<div data-role="content">
@@ -222,25 +228,24 @@
 	<div data-role="header">
 		<a href="/" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
+			data-icon="back"  data-transition="none" data-ajax="none" 
+			data-theme="a" data-ajax="none">Back</a>
 		<h1>{{ businessname }}</h1>
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
 		<div data-role="navbar">
 	        <ul class="nav">
-	        	<li><a href="#invoices" >Invoices</a></li>
-	        	<li><a href="#projects" >Projects</a></li>
-				<li><a class="ui-btn-active ui-state-persist" href="#timeform" >Add Time</a></li>
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a class="ui-btn-active ui-state-persist" href="#timeform" data-transition="none">Add Time</a></li>
 <!-- 	        	<li><a href="#clientinfo">Contact</a></li> -->
 			</ul>
 			<ul class="nav">
-				<li><a href="#addservice" data-role="button">Add Service</a></li>
-			</ul>
+	        	<li><a href="#addservice" data-role="button" data-transition="none">Add Service</a></li>
+	        </ul>
 		</div> <!-- /navbar -->
 	</div><!-- /header -->
 
 	<div data-role="content">
-
-		
 		
 		<form action="/timesheet" class="well" method="post"  >
 			<fieldset>
@@ -278,13 +283,24 @@
 	<div data-role="header">
 		<a href="#timeform" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
-		<h1>Add Service</h1>
+			data-icon="back"  data-transition="none"
+			data-theme="a" data-ajax="none">Back</a>
+		<h1>{{ businessname }}</h1>
+		<a data-role="button" href="#contact" data-transition="none">Contact</a>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
+			</ul>
+			<ul class="nav">
+	        	<li><a href="#addservice" class="ui-btn-active ui-state-persist" data-role="button" data-transition="none">Add Service</a></li>
+	        </ul>
+		</div> <!-- /navbar -->
 	</div> <!-- /header -->
 	<div data-role="content">
 	
-	
+
 			<form id="addservice" class="well" action="/service" method="post">
 			<fieldset>
 				<legend></legend>
@@ -303,13 +319,21 @@
 
 
 
-<div data-role="page" id="clientcontact">
+<div data-role="page" id="contact">
 	<div data-role="header">
 		<a href="#projects" 
 			data-role="button" 
-			data-icon="back" 
-			data-theme="a">Back</a>
+			data-icon="back" data-transition="none"
+			data-theme="a" data-ajax="none">Back</a>
 		<h1>{{businessname}}</h1>
+		<a data-role="button" href="#contact" class="ui-btn-active ui-state-persist" data-transition="none">Contact</a>
+		<div data-role="navbar">
+	        <ul class="nav">
+	        	<li><a href="#invoices" data-transition="none">Invoices</a></li>
+	        	<li><a href="#projects" data-transition="none">Projects</a></li>
+				<li><a href="#timeform" data-transition="none">Add Time</a></li>
+			</ul>
+		</div> <!-- /navbar -->
 	</div>
 	<div data-role="content">
 
